@@ -69,7 +69,6 @@ namespace Account.Views
                 List<ConsumprecordResponse>? consumprecordResponse = JsonSerializer.Deserialize<List<ConsumprecordResponse>>(responseJson);
                 if (consumprecordResponse != null)
                 {
-                    consumpDataGrid.Items.Clear();
                     consumpDataGrid.ItemsSource = consumprecordResponse.OrderByDescending(t=>t.consumpTime);
                 }
             }
