@@ -70,7 +70,7 @@ namespace Account.Views
                 if (consumprecordResponse != null)
                 {
                     consumpDataGrid.Items.Clear();
-                    consumpDataGrid.ItemsSource = consumprecordResponse;
+                    consumpDataGrid.ItemsSource = consumprecordResponse.OrderByDescending(t=>t.consumpTime);
                 }
             }
         }
