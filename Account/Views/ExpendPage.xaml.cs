@@ -66,11 +66,15 @@ namespace Account.Views
             string responseJson = await response.Content.ReadAsStringAsync();
             if (responseJson != null)
             {
-                List<ConsumprecordResponse>? consumprecordResponse = JsonSerializer.Deserialize<List<ConsumprecordResponse>>(responseJson);
-                if (consumprecordResponse != null)
-                {
-                    consumpDataGrid.ItemsSource = consumprecordResponse.OrderByDescending(t=>t.consumpTime);
-                }
+                BindingDataGrid(responseJson);
+            }
+        }
+        private void BindingDataGrid(string responseJson)
+        {
+            List<ConsumprecordResponse>? consumprecordResponse = JsonSerializer.Deserialize<List<ConsumprecordResponse>>(responseJson);
+            if (consumprecordResponse != null)
+            {
+                consumpDataGrid.ItemsSource = consumprecordResponse.OrderByDescending(t => t.consumpTime);
             }
         }
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
