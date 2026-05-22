@@ -17,11 +17,15 @@
         <Label Content="结束日期" HorizontalAlignment="Left"  hc:InfoElement.Placeholder="请选择日期" Margin="265,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
         <hc:DatePicker Name="endDatePicker"  SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left" Margin="365,37,0,0" VerticalAlignment="Top" FontSize="16" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
         <Button Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="517,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <DataGrid Name="consumpDataGrid" HeadersVisibility="All" 
+        <DataGrid Name="consumpDataGrid" 
+          HorizontalAlignment="Left"
+          HeadersVisibility="All" 
           RowHeaderWidth="60" 
           AutoGenerateColumns="False" 
-          ItemsSource="{Binding DataList}" Margin="0,83,0,0"
-          LoadingRow="DataGrid_LoadingRow">
+          IsReadOnly="True"
+          Margin="0,83,0,0"
+          LoadingRow="DataGrid_LoadingRow" 
+          GridLinesVisibility="All" >
 
             <!-- 表头左侧：全选/单选框复选槽 -->
             <DataGrid.RowHeaderTemplate>
@@ -29,11 +33,17 @@
                     <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
-
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
             <!-- 列定义 -->
             <DataGrid.Columns>
                 <!-- 序号/文本列 -->
-                <DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}, Mode=FindAncestor}}" Header="序号"/>
+                <DataGridTextColumn IsReadOnly="True" Width="50" CanUserResize="False" Binding="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}, Mode=FindAncestor}}" Header="序号"/>
 
                 <!-- 图片列 -->
                 <DataGridTemplateColumn Width="60" Visibility="Collapsed" CanUserResize="False" Header="consumpId">
@@ -44,11 +54,42 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Width="100" Binding="{Binding consumpType}" Header="支出类型"/>
-                <DataGridTextColumn Width="100" Binding="{Binding consumpAmount}" Header="支出金额"/>
-                <DataGridTextColumn Width="200" Binding="{Binding consumpTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="支出时间"/>
-                <DataGridTextColumn Width="200" Binding="{Binding createTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="创建时间"/>
-                <DataGridTextColumn Width="100" Binding="{Binding consumpNote}" Header="备注"/>
+                <DataGridTextColumn Width="80" Binding="{Binding consumpType}" Header="支出类型"/>
+                <DataGridTextColumn Width="80" Binding="{Binding consumpAmount}" Header="支出金额"/>
+                <DataGridTextColumn Width="160" Binding="{Binding consumpTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="支出时间"/>
+                <DataGridTextColumn Width="160" Binding="{Binding createTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="创建时间"/>
+                <DataGridTemplateColumn Width="130"  Header="备注">
+                    <!-- 1. 日常浏览状态（只读） -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!-- 直接在这里对真正的 TextBlock 设置属性，没有任何中间商赚差价 -->
+                            <TextBlock Text="{Binding consumpNote}" 
+                               TextWrapping="Wrap" 
+                               Padding="5,8" 
+                               VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <!-- 2. 双击编辑状态（可选，如果不需要编辑可以不写） -->
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <!-- 编辑时使用 TextBox，同样支持换行 -->
+                            <TextBox Text="{Binding consumpNote, UpdateSourceTrigger=PropertyChanged}" 
+                             TextWrapping="Wrap" 
+                             AcceptsReturn="True"
+                             VerticalContentAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="操作" Width ="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="45">
+                                <Button x:Name="btnDelete" Margin="35,0,10,10" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="删除" Width="80" Height="30"  FontSize="13" Click="btnDelete_Click"  Background="#1C86EE" Foreground="White"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

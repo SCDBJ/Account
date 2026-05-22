@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using hc = HandyControl.Controls;
 
 namespace Account.Views
 {
@@ -26,7 +27,8 @@ namespace Account.Views
     public partial class ExpendPage : Page
     {
         private static readonly HttpClient _httpClient = new HttpClient();
-        private string consumprecordUrl = "/api/consumprecord-items";
+        private string consumprecordItems = "/api/consumprecord-items";
+        private string consumprecordDelete = "/api/consumprecord-delete";
         public ExpendPage()
         {
             InitializeComponent();
@@ -50,7 +52,7 @@ namespace Account.Views
             var endDateStr = endDate.ToString("yyyy-MM-dd");
             var postJson = new ConsumprecordRequest { startTime = startDateStr, endTime = endDateStr };
 
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(App.host + consumprecordUrl, postJson);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(App.host + consumprecordItems, postJson);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -81,6 +83,30 @@ namespace Account.Views
         {
             // 获取当前行的索引（从 0 开始，所以加 1 变成序号）
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Button? button = sender as Button;
+            if (button != null)
+            {
+                // 2. Button 的 DataContext 就是当前行绑定的实体对象
+                // 假设你给 DataGrid 绑定的数据源是一个 UserModel 列表
+                ConsumprecordResponse? currentItem = button.DataContext as ConsumprecordResponse;
+
+                if (hc.MessageBox.Show("确定要删除吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    HttpResponseMessage response = await _httpClient.DeleteAsync(App.host + consumprecordDelete +$"/{currentItem?.consumpId}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        hc.MessageBox.Show("删除成功！");
+                    }
+                    else
+                    {
+                        hc.MessageBox.Show($"删除失败，状态码: {response.StatusCode}");
+                    }
+                }
+            }
         }
     }
 }

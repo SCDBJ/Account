@@ -11,6 +11,8 @@
                 <!-- 2. 引入 HandyControl 的基础控件样式 -->
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
+        
     </Application.Resources>
 </Application>
