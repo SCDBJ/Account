@@ -6,7 +6,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:Account"
         mc:Ignorable="d"
-        Title="Account" Height="450" Width="800"  WindowState="Maximized"  ResizeMode="CanMinimize" Loaded="Window_Loaded" >
+        Title="Account" Height="450" Width="800"  WindowState="Maximized"   Loaded="Window_Loaded" >
     
     <Grid>
         <Grid.ColumnDefinitions>

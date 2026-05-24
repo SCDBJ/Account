@@ -1,0 +1,53 @@
+﻿<Window x:Class="Account.Views.ExpendAdd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Account.Views"
+        xmlns:hc="https://handyorg.github.io/handycontrol" 
+        mc:Ignorable="d"
+        Title="添加支出信息" Height="300" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 支出类型 -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="支出类型：" VerticalAlignment="Center" Margin="0,10"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" 
+                  ItemsSource="{Binding CategoryTypes}" 
+                  SelectedValue="{Binding ConsumprecordData.categoryId, UpdateSourceTrigger=PropertyChanged}" 
+                  DisplayMemberPath="categoryName"  
+                  SelectedValuePath="categoryId"
+                  Margin="0,10" VerticalContentAlignment="Center">
+
+        </ComboBox>
+        <!-- 支出金额 -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="支出金额：" VerticalAlignment="Center" Margin="0,10"/>
+        <hc:NumericUpDown Grid.Row="1" Grid.Column="1" DecimalPlaces="2" Increment="1" Value="{Binding ConsumprecordData.consumpAmount, UpdateSourceTrigger=PropertyChanged}" Margin="0,10" VerticalContentAlignment="Center"/>
+
+        <!-- 备注 -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="备注：" VerticalAlignment="Center" Margin="0,10"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ConsumprecordData.consumpNote, UpdateSourceTrigger=PropertyChanged}" Margin="0,10" VerticalContentAlignment="Center"/>
+
+        <!-- 支出时间 -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="支出时间：" VerticalAlignment="Center" Margin="0,10"/>
+        <hc:DateTimePicker Grid.Row="3" Grid.Column="1" SelectedDateTime="{Binding ConsumprecordData.consumpTime, UpdateSourceTrigger=PropertyChanged}"  Margin="0,10" VerticalContentAlignment="Center"/>
+
+        <!-- 底部按钮 -->
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="确定" Width="80" Height="28" Margin="0,0,10,0" IsDefault="True" Click="Save_Click"/>
+            <Button Content="取消" Width="80" Height="28" IsCancel="True" Click="Cancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

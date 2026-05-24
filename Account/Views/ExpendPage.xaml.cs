@@ -77,6 +77,8 @@ namespace Account.Views
             if (consumprecordResponse != null)
             {
                 consumpDataGrid.ItemsSource = consumprecordResponse.OrderByDescending(t => t.consumpTime);
+                var sumAmount= consumprecordResponse.Sum(t => t.consumpAmount);
+                tblockSummary.Text= sumAmount.ToString();
             }
         }
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
@@ -107,6 +109,17 @@ namespace Account.Views
                     }
                 }
             }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            ExpendAdd expendAdd=new ExpendAdd();
+            if (expendAdd.ShowDialog() == true)
+            {
+                ConsumprecordResponse newConsumprecord= expendAdd.ConsumprecordData;
+                hc.MessageBox.Show($"添加成功！");
+            }
+
         }
     }
 }

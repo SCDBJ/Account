@@ -6,13 +6,9 @@ using System.Text;
 
 namespace Account.Models.Consump.Response
 {
-    public class ConsumprecordResponse : INotifyPropertyChanged
+    public class CategoryResponse : INotifyPropertyChanged
     {
         private int _categoryId;
-        public int consumpId
-        {
-            get; set;
-        }
         public int categoryId
         {
             get;
@@ -22,23 +18,15 @@ namespace Account.Models.Consump.Response
                 OnPropertyChanged();
             }
         }
-        public string? consumpType
+        public string? categoryName
         {
             get; set;
         }
-        public decimal? consumpAmount
+        public string? categoryType
         {
             get; set;
         }
-        public DateTime consumpTime
-        {
-            get; set;
-        }
-        public DateTime createTime
-        {
-            get; set;
-        }
-        public string? consumpNote
+        public int priority
         {
             get; set;
         }

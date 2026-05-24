@@ -17,13 +17,14 @@
         <Label Content="结束日期" HorizontalAlignment="Left"  hc:InfoElement.Placeholder="请选择日期" Margin="265,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
         <hc:DatePicker Name="endDatePicker"  SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left" Margin="365,37,0,0" VerticalAlignment="Top" FontSize="16" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
         <Button Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="517,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="新增" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="618,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <DataGrid Name="consumpDataGrid" 
           HorizontalAlignment="Left"
           HeadersVisibility="All" 
           RowHeaderWidth="60" 
           AutoGenerateColumns="False" 
           IsReadOnly="True"
-          Margin="0,83,0,0"
+          Margin="0,83,0,40"
           LoadingRow="DataGrid_LoadingRow" 
           GridLinesVisibility="All" >
 
@@ -92,5 +93,8 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <TextBlock FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,429,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
+        <TextBlock x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="207,429,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+
     </Grid>
 </Page>
