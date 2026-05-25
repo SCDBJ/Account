@@ -11,11 +11,14 @@ namespace Account.Models.Consump.Response
         private int _categoryId;
         public int categoryId
         {
-            get;
+            get => _categoryId;
             set
             {
-                _categoryId = value;
-                OnPropertyChanged();
+                if (_categoryId != value)
+                {
+                    _categoryId = value;
+                    OnPropertyChanged();
+                }
             }
         }
         public string? categoryName

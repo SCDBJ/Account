@@ -29,6 +29,7 @@ namespace Account.Views
         private static readonly HttpClient _httpClient = new HttpClient();
         private string consumprecordItems = "/api/consumprecord-items";
         private string consumprecordDelete = "/api/consumprecord-delete";
+        private string consumprecordAdd = "/api/consumprecord-add";
         public ExpendPage()
         {
             InitializeComponent();
@@ -102,6 +103,7 @@ namespace Account.Views
                     if (response.IsSuccessStatusCode)
                     {
                         hc.MessageBox.Show("删除成功！");
+                        HttpRequest();
                     }
                     else
                     {
@@ -111,15 +113,32 @@ namespace Account.Views
             }
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        private async void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             ExpendAdd expendAdd=new ExpendAdd();
             if (expendAdd.ShowDialog() == true)
             {
                 ConsumprecordResponse newConsumprecord= expendAdd.ConsumprecordData;
-                hc.MessageBox.Show($"添加成功！");
-            }
+                ConsumprecordAddRequest consumprecordAddRequest= new ConsumprecordAddRequest() { categoryId= newConsumprecord.categoryId, consumpAmount= newConsumprecord.consumpAmount, consumpNote= newConsumprecord.consumpNote, consumpTime= newConsumprecord.consumpTime };
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(App.host + consumprecordAdd, consumprecordAddRequest);
+                if (!response.IsSuccessStatusCode)
+                {
+                    // 专门读取服务器返回的错误文本
+                    string errorDetails = await response.Content.ReadAsStringAsync();
+                    var statusCode = response.StatusCode;
+                    // 可以在这里根据 errorDetails 进一步调试
+                    Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
 
+                    return;
+                }
+
+                string responseJson = await response.Content.ReadAsStringAsync();
+                if (responseJson != null&&responseJson.Contains("保存成功"))
+                {
+                    HttpRequest();
+                    hc.MessageBox.Show($"添加成功！");
+                }
+            }
         }
     }
 }

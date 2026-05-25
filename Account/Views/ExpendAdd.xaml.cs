@@ -28,8 +28,6 @@ namespace Account.Views
     /// </summary>
     public partial class ExpendAdd : System.Windows.Window
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
-        private string categoryItems = "/api/category-items";
         public ConsumprecordResponse ConsumprecordData
         {
             get; private set;
@@ -46,6 +44,7 @@ namespace Account.Views
 
             ConsumprecordData = new ConsumprecordResponse() { consumpTime = DateTime.Now };
             this.DataContext = this;
+            this.Loaded += Window_Loaded;
         }
         private void Save_Click(object sender, RoutedEventArgs e)
         {

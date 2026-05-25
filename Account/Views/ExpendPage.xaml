@@ -12,6 +12,10 @@
       Title="ExpendPage" Loaded="Page_Loaded">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Label Content="开始日期" HorizontalAlignment="Left" Margin="26,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
         <hc:DatePicker Name="startDatePicker" SelectedDate="{x:Static sys:DateTime.Now}" hc:InfoElement.Placeholder="请选择日期" HorizontalAlignment="Left" Margin="130,37,0,0" FontSize="16" VerticalAlignment="Top" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
         <Label Content="结束日期" HorizontalAlignment="Left"  hc:InfoElement.Placeholder="请选择日期" Margin="265,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
@@ -55,7 +59,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Width="80" Binding="{Binding consumpType}" Header="支出类型"/>
+                <DataGridTextColumn Width="80" Binding="{Binding categoryName}" Header="支出类型"/>
                 <DataGridTextColumn Width="80" Binding="{Binding consumpAmount}" Header="支出金额"/>
                 <DataGridTextColumn Width="160" Binding="{Binding consumpTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="支出时间"/>
                 <DataGridTextColumn Width="160" Binding="{Binding createTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="创建时间"/>
@@ -93,8 +97,8 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,429,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
-        <TextBlock x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="207,429,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1" x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="207,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

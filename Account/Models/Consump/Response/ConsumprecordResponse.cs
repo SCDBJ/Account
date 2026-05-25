@@ -15,14 +15,17 @@ namespace Account.Models.Consump.Response
         }
         public int categoryId
         {
-            get;
+            get=> _categoryId;
             set
             {
-                _categoryId = value;
-                OnPropertyChanged();
+                if (_categoryId != value)
+                {
+                    _categoryId = value;
+                    OnPropertyChanged();
+                }
             }
         }
-        public string? consumpType
+        public string? categoryName
         {
             get; set;
         }
@@ -37,11 +40,11 @@ namespace Account.Models.Consump.Response
         public DateTime createTime
         {
             get; set;
-        }
+        }= DateTime.UtcNow;
         public string? consumpNote
         {
             get; set;
-        }
+        } = "";
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
