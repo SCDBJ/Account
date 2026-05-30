@@ -3,6 +3,8 @@
 using HandyControl.Controls;
 using HandyControl.Data;
 
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +23,8 @@ namespace Account
     /// </summary>
     public partial class MainWindow: System.Windows.Window
     {
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private string consumpAutoAccount = "/api/consumprecord-autoaccount";
         public MainWindow()
         {
             InitializeComponent();
@@ -54,9 +58,24 @@ namespace Account
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsync(App.host + consumpAutoAccount, null);
+                if (response.IsSuccessStatusCode)
+                {
 
+                }
+                else
+                {
+
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+
+            }
         }
     }
 }

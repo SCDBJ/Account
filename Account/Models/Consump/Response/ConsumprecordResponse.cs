@@ -33,7 +33,23 @@ namespace Account.Models.Consump.Response
         {
             get; set;
         }
+        private DateTime _consumpTime;
         public DateTime consumpTime
+        {
+            get => _consumpTime;
+            set
+            {
+                _consumpTime = value;
+                // 当时间被赋值时，自动把年份也赋过去
+                consumpYear = _consumpTime.Year;
+                consumpMonth = _consumpTime.Month;
+            }
+        }
+        public int consumpYear
+        {
+            get; set;
+        }
+        public int? consumpMonth
         {
             get; set;
         }
