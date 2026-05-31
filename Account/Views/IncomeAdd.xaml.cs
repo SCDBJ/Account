@@ -46,7 +46,7 @@ namespace Account.Views
             // 这里可以加入数据校验，比如判断姓名是否为空
             if (IncomerecordData.categoryId == 0)
             {
-                hc.MessageBox.Show("支出类型不能为空！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                hc.MessageBox.Show("收入类型不能为空！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Account.Views
             List<CategoryResponse>? result = await ApiService.GetCategoryTypesAsync();
 
             // 5. 将请求到的数据填充到绑定的集合中
-            foreach (var income in result.Where(t => t.categoryType.Equals("支出")))
+            foreach (var income in result.Where(t => t.categoryType.Equals("收入")))
             {
                 CategoryTypes.Add(income);
             }
