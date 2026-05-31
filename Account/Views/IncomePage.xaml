@@ -66,9 +66,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="支出类型"/>
-                <DataGridTextColumn Width="100" Binding="{Binding incomeAmount}" Header="支出金额"/>
-                <DataGridTextColumn Width="160" Binding="{Binding incomeTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="支出时间"/>
+                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="收入类型"/>
+                <DataGridTextColumn Width="100" Binding="{Binding incomeAmount}" Header="收入金额"/>
+                <DataGridTextColumn Width="160" Binding="{Binding incomeTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="收入时间"/>
                 <DataGridTextColumn Width="160" Binding="{Binding createTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="创建时间"/>
                 <DataGridTemplateColumn Width="130"  Header="备注">
                     <!-- 1. 日常浏览状态（只读） -->
@@ -138,10 +138,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn x:Name="dgtc_incomeYear" Width="80" Binding="{Binding incomeYear}" Header="支出年份"/>
-                <DataGridTextColumn x:Name="dgtc_incomeMonth" Width="80" Binding="{Binding incomeMonth}" Header="支出月份"/>
-                <DataGridTextColumn x:Name="dgtc_incomeType" Width="100" Binding="{Binding categoryName}" Header="支出类型"/>
-                <DataGridTextColumn x:Name="dgtc_incomeAmount" Width="100" Binding="{Binding incomeAmount}" Header="支出金额"/>
+                <DataGridTextColumn x:Name="dgtc_incomeYear" Width="80" Binding="{Binding incomeYear}" Header="收入年份"/>
+                <DataGridTextColumn x:Name="dgtc_incomeMonth" Width="80" Binding="{Binding incomeMonth}" Header="收入月份"/>
+                <DataGridTextColumn x:Name="dgtc_incomeType" Width="100" Binding="{Binding categoryName}" Header="收入类型"/>
+                <DataGridTextColumn x:Name="dgtc_incomeAmount" Width="100" Binding="{Binding incomeAmount}" Header="收入金额"/>
             </DataGrid.Columns>
         </DataGrid>
         <Label Grid.Column="1" Content="类型：" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
