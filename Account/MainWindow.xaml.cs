@@ -54,8 +54,11 @@ namespace Account
                     case "Income":
                         MainFrame.Navigate(new IncomePage());
                         break;
+                    case "IncomeCategory":
+                        MainFrame.Navigate(new IncomeCategory());
+                        break;
                     case "Other":
-                        MainFrame.Navigate(new IncomePage());
+                        MainFrame.Navigate(new Other());
                         break;
                 }
             }

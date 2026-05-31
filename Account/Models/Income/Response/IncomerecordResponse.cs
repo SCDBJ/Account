@@ -58,6 +58,16 @@ namespace Account.Models.Income.Response
         {
             get; set;
         }
+        // 自动计算的 int 字段（格式为 YYYYMM）
+        // 每次访问 incomeRecord.IncomeDate 时，它都会基于最新的 IncomeTime 自动计算
+        public int incomeDate
+        {
+            get
+            {
+                // 通过 数学公式 (年 * 100 + 月) 转换，性能最高且不容易出错
+                return incomeTime.Year * 100 + incomeTime.Month;
+            }
+        }
         [JsonConverter(typeof(MyDateTimeConverter))]
         public DateTime createTime
         {

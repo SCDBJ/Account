@@ -116,7 +116,7 @@ namespace Account.Views
                     consumpStatisticsDataGrid.ItemsSource = matchList;
                     var sumAmount = matchList?.Sum(t => t.consumpAmount);
                     tblockSummary.Text = sumAmount.ToString();
-                    statisticsSummary.Text = matchList?.Sum(x => x.consumpAmount).ToString();
+                    statisticsSummary.Text = sumAmount.ToString();
                 }
             }
         }

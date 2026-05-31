@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Account.Views"
-      xmlns:hc="https://handyorg.github.io/handycontrol" x:Class="Account.Views.IncomePage"
+      xmlns:hc="https://handyorg.github.io/handycontrol" 
+      x:Class="Account.Views.IncomePage"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       mc:Ignorable="d" 
@@ -146,7 +147,7 @@
         </DataGrid>
         <Label Grid.Column="1" Content="类型：" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
 
-        <hc:ComboBox Grid.Column="1" Name="cboxStatistics" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" Width="135" RenderTransformOrigin="-4.871,-8.25" SelectionChanged="cboxStatistics_SelectionChanged" Height="30">
+        <hc:ComboBox Grid.Column="1" Name="cboxStatistics" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" Width="135"  SelectionChanged="cboxStatistics_SelectionChanged" Height="30">
             <ComboBoxItem Tag="1" IsSelected="True">年份+月份+类别</ComboBoxItem>
             <ComboBoxItem Tag="2">年份+月份</ComboBoxItem>
             <ComboBoxItem Tag="3">年份+类别</ComboBoxItem>

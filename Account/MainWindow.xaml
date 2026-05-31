@@ -56,6 +56,15 @@ Height="40"
 Stretch="Uniform"/>
                 </hc:SideMenuItem.Icon>
             </hc:SideMenuItem>
+            <hc:SideMenuItem Header="收入类别" CommandParameter="IncomeCategory">
+                <hc:SideMenuItem.Icon>
+                    <!-- 嵌入传统的图片控件，建议固定宽高以防变形 -->
+                    <Image Source="/Images/收入类别.png" 
+Width="130" 
+Height="40"
+Stretch="Uniform"/>
+                </hc:SideMenuItem.Icon>
+            </hc:SideMenuItem>
             <hc:SideMenuItem Visibility="Collapsed" Header="其他" CommandParameter="Other">
                 <!--<hc:SideMenuItem.Icon>
                     --><!-- 嵌入传统的图片控件，建议固定宽高以防变形 --><!--

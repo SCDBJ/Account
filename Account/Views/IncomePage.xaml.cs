@@ -99,7 +99,8 @@ namespace Account.Views
                 {
                     incomerecordList = incomerecordResponse;
                     incomeDataGrid.ItemsSource = incomerecordResponse.Where(t => t.incomeTime >= startDate).OrderByDescending(t => t.incomeTime);
-
+                    var sumAmount = incomerecordResponse.Where(t => t.incomeTime >= startDate)?.Sum(t => t.incomeAmount);
+                    tblockSummary.Text = sumAmount.ToString();
 
                     int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
                     int statisticsMonth = Convert.ToInt16(cboxStatisticsMonth.SelectedValue);
@@ -113,8 +114,7 @@ namespace Account.Views
                 })
                 .ToList();
                     incomeStatisticsDataGrid.ItemsSource = matchList;
-                    var sumAmount = matchList?.Sum(t => t.incomeAmount);
-                    tblockSummary.Text = sumAmount.ToString();
+                    
                     statisticsSummary.Text = matchList?.Sum(x => x.incomeAmount).ToString();
                 }
             }
