@@ -5,21 +5,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Account.Models.Consump.Response
+namespace Account.Models.Income.Response
 {
-    public class ConsumprecordResponse : INotifyPropertyChanged
+    public class IncomerecordResponse : INotifyPropertyChanged
     {
         private int _categoryId;
-        public int consumpId
+        public int incomeId
         {
             get; set;
         }
         public int categoryId
         {
-            get=> _categoryId;
+            get => _categoryId;
             set
             {
                 if (_categoryId != value)
@@ -33,29 +32,29 @@ namespace Account.Models.Consump.Response
         {
             get; set;
         }
-        public decimal? consumpAmount
+        public decimal? incomeAmount
         {
             get; set;
         }
         [JsonConverter(typeof(MyDateTimeConverter))]
-        private DateTime _consumpTime;
+        private DateTime _incomeTime;
         [JsonConverter(typeof(MyDateTimeConverter))]
-        public DateTime consumpTime
+        public DateTime incomeTime
         {
-            get => _consumpTime;
+            get => _incomeTime;
             set
             {
-                _consumpTime = value;
+                _incomeTime = value;
                 // 当时间被赋值时，自动把年份也赋过去
-                consumpYear = _consumpTime.Year;
-                consumpMonth = _consumpTime.Month;
+                incomeYear = _incomeTime.Year;
+                incomeMonth = _incomeTime.Month;
             }
         }
-        public int consumpYear
+        public int incomeYear
         {
             get; set;
         }
-        public int? consumpMonth
+        public int? incomeMonth
         {
             get; set;
         }
@@ -63,8 +62,8 @@ namespace Account.Models.Consump.Response
         public DateTime createTime
         {
             get; set;
-        }= DateTime.UtcNow;
-        public string? consumpNote
+        } = DateTime.UtcNow;
+        public string? incomeNote
         {
             get; set;
         } = "";
@@ -75,5 +74,4 @@ namespace Account.Models.Consump.Response
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    
 }

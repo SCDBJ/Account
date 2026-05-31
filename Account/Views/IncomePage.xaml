@@ -7,16 +7,156 @@
       xmlns:hc="https://handyorg.github.io/handycontrol" x:Class="Account.Views.IncomePage"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-      xmlns:vms="clr-namespace:Account.ViewModels"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="IncomePage">
-    <Page.DataContext>
-        <!-- 指定 DataContext 为我们的 ViewModel -->
-        <vms:MainViewModel />
-    </Page.DataContext>
+      d:DesignHeight="800" d:DesignWidth="1900"
+      Title="IncomePage" Loaded="Page_Loaded">
     <Grid>
-        <!-- 核心：将 Series 属性绑定至 ViewModel 中的 SeriesCollection -->
-        <lvc:CartesianChart Series="{Binding SeriesCollection}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="4.5*"/>
+            <ColumnDefinition Width="3.5*"/>
+        </Grid.ColumnDefinitions>
+        <Label  Grid.Column="0" Content="开始日期" HorizontalAlignment="Left" Margin="26,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
+        <hc:DatePicker  Grid.Column="0" Name="startDatePicker" SelectedDate="{x:Static sys:DateTime.Now}" hc:InfoElement.Placeholder="请选择日期" HorizontalAlignment="Left" Margin="130,37,0,0" FontSize="16" VerticalAlignment="Top" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
+        <Label  Grid.Column="0" Content="结束日期" HorizontalAlignment="Left"  hc:InfoElement.Placeholder="请选择日期" Margin="265,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
+        <hc:DatePicker  Grid.Column="0" Name="endDatePicker"  SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left" Margin="365,37,0,0" VerticalAlignment="Top" FontSize="16" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
+        <Button  Grid.Column="0" Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="517,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button  Grid.Column="0" Content="新增" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="618,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <DataGrid  Grid.Column="0" 
+      Name="incomeDataGrid" 
+      HorizontalAlignment="Left"
+      HeadersVisibility="All" 
+      RowHeaderWidth="60" 
+      AutoGenerateColumns="False" 
+      IsReadOnly="True"
+      Margin="0,83,0,40"
+      LoadingRow="DataGrid_LoadingRow" 
+      GridLinesVisibility="All" 
+      VerticalScrollBarVisibility="Auto"
+      MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
+
+            <!-- 表头左侧：全选/单选框复选槽 -->
+            <!--<DataGrid.RowHeaderTemplate>
+            <DataTemplate>
+                <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
+            </DataTemplate>
+        </DataGrid.RowHeaderTemplate>-->
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <!-- 序号/文本列 -->
+                <!--<DataGridTextColumn IsReadOnly="True" Width="50" CanUserResize="False" Binding="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}, Mode=FindAncestor}}" Header="序号"/>-->
+
+                <DataGridTemplateColumn Width="60" Visibility="Collapsed" CanUserResize="False" Header="incomeId">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding incomeId}" Width="32" Height="32" Stretch="Uniform"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="支出类型"/>
+                <DataGridTextColumn Width="100" Binding="{Binding incomeAmount}" Header="支出金额"/>
+                <DataGridTextColumn Width="160" Binding="{Binding incomeTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="支出时间"/>
+                <DataGridTextColumn Width="160" Binding="{Binding createTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" Header="创建时间"/>
+                <DataGridTemplateColumn Width="130"  Header="备注">
+                    <!-- 1. 日常浏览状态（只读） -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!-- 直接在这里对真正的 TextBlock 设置属性，没有任何中间商赚差价 -->
+                            <TextBlock Text="{Binding incomeNote}" 
+                           TextWrapping="Wrap" 
+                           Padding="5,8" 
+                           VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <!-- 2. 双击编辑状态（可选，如果不需要编辑可以不写） -->
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <!-- 编辑时使用 TextBox，同样支持换行 -->
+                            <TextBox Text="{Binding incomeNote, UpdateSourceTrigger=PropertyChanged}" 
+                         TextWrapping="Wrap" 
+                         AcceptsReturn="True"
+                         VerticalContentAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="操作" Width ="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="45">
+                                <Button x:Name="btnDelete" Margin="35,0,10,10" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="删除" Width="80" Height="30"  FontSize="13" Click="btnDelete_Click"  Background="#1C86EE" Foreground="White"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1"  Grid.Column="0" x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <DataGrid  Grid.Column="1" 
+        x:Name="incomeStatisticsDataGrid" 
+        HorizontalAlignment="Left"
+        HeadersVisibility="All" 
+        RowHeaderWidth="60" 
+        AutoGenerateColumns="False" 
+        IsReadOnly="True"
+        Margin="50,83,0,40"
+        LoadingRow="DataGrid_LoadingRow" 
+        GridLinesVisibility="All" 
+        VerticalScrollBarVisibility="Auto"
+        MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <!-- 序号/文本列 -->
+                <!--<DataGridTextColumn IsReadOnly="True" Width="50" CanUserResize="False" Binding="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}, Mode=FindAncestor}}" Header="序号"/>-->
+
+                <DataGridTemplateColumn Width="60" Visibility="Collapsed" CanUserResize="False" Header="incomeId">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding incomeId}" Width="32" Height="32" Stretch="Uniform"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="dgtc_incomeYear" Width="80" Binding="{Binding incomeYear}" Header="支出年份"/>
+                <DataGridTextColumn x:Name="dgtc_incomeMonth" Width="80" Binding="{Binding incomeMonth}" Header="支出月份"/>
+                <DataGridTextColumn x:Name="dgtc_incomeType" Width="100" Binding="{Binding categoryName}" Header="支出类型"/>
+                <DataGridTextColumn x:Name="dgtc_incomeAmount" Width="100" Binding="{Binding incomeAmount}" Header="支出金额"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Grid.Column="1" Content="类型：" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
+
+        <hc:ComboBox Grid.Column="1" Name="cboxStatistics" HorizontalAlignment="Left" Margin="50,37,0,0" VerticalAlignment="Top" Width="135" RenderTransformOrigin="-4.871,-8.25" SelectionChanged="cboxStatistics_SelectionChanged" Height="30">
+            <ComboBoxItem Tag="1" IsSelected="True">年份+月份+类别</ComboBoxItem>
+            <ComboBoxItem Tag="2">年份+月份</ComboBoxItem>
+            <ComboBoxItem Tag="3">年份+类别</ComboBoxItem>
+            <ComboBoxItem Tag="4">年份</ComboBoxItem>
+
+        </hc:ComboBox>
+        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="200,37,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
+        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsMonth" HorizontalAlignment="Left" Margin="290,37,0,0" VerticalAlignment="Top" Width="70"  SelectionChanged="cboxStatisticsMonth_SelectionChanged" Height="30"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="50,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" x:Name="statisticsSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="150,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+
     </Grid>
 </Page>

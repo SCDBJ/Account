@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Account.Models.Consump.Request
+namespace Account.Models.Income.Request
 {
-    public class ConsumprecordRequest
+    public class IncomerecordRequest
     {
         public string? startTime
         {

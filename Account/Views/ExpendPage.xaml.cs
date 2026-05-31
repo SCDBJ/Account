@@ -48,7 +48,6 @@ namespace Account.Views
         }
         private void btnQuery_Click(object sender, RoutedEventArgs e)
         {
-            //HttpRequest();
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
             var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
@@ -101,7 +100,7 @@ namespace Account.Views
                 {
                     consumprecordList = consumprecordResponse;
                     consumpDataGrid.ItemsSource = consumprecordResponse.Where(t => t.consumpTime >= startDate).OrderByDescending(t => t.consumpTime);
-                   
+
 
                     int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
                     int statisticsMonth = Convert.ToInt16(cboxStatisticsMonth.SelectedValue);
@@ -117,7 +116,7 @@ namespace Account.Views
                     consumpStatisticsDataGrid.ItemsSource = matchList;
                     var sumAmount = matchList?.Sum(t => t.consumpAmount);
                     tblockSummary.Text = sumAmount.ToString();
-                    statisticsSummary.Text = matchList?.Sum(x=>x.consumpAmount).ToString();
+                    statisticsSummary.Text = matchList?.Sum(x => x.consumpAmount).ToString();
                 }
             }
         }
@@ -200,6 +199,24 @@ namespace Account.Views
                                 cboxStatisticsYear.Visibility = Visibility.Visible;
                             if (cboxStatisticsMonth != null)
                                 cboxStatisticsMonth.Visibility = Visibility.Visible;
+
+                            if (cboxStatisticsYear != null && cboxStatisticsMonth != null)
+                            {
+                                int statisticsYear1 = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
+                                int statisticsMonth1 = Convert.ToInt16(cboxStatisticsMonth.SelectedValue);
+                                var matchList = consumprecordList?.Where(r => r.consumpYear == statisticsYear1 && r.consumpMonth == statisticsMonth1).GroupBy(x => new { x.consumpYear, x.consumpMonth, x.categoryName })
+           .Select(g => new
+           {
+               g.Key.consumpYear,
+               g.Key.consumpMonth,
+               g.Key.categoryName,
+               consumpAmount = g.Sum(x => x.consumpAmount)
+           })
+           .ToList();
+                                consumpStatisticsDataGrid.ItemsSource = matchList;
+                                statisticsSummary.Text = matchList?.Sum(x => x.consumpAmount).ToString();
+                            }
+
                             break;
                         case "2"://年份+月份
                             dgtc_consumpYear.Visibility = Visibility.Visible;
@@ -209,8 +226,8 @@ namespace Account.Views
 
                             cboxStatisticsYear.Visibility = Visibility.Visible;
 
-                            int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
-                            var matchList = consumprecordList?.Where(r => r.consumpYear == statisticsYear).GroupBy(x => new { x.consumpYear, x.consumpMonth })
+                            int statisticsYear2 = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
+                            var matchList1 = consumprecordList?.Where(r => r.consumpYear == statisticsYear2).GroupBy(x => new { x.consumpYear, x.consumpMonth })
         .Select(g => new
         {
             g.Key.consumpYear,
@@ -218,8 +235,8 @@ namespace Account.Views
             consumpAmount = g.Sum(x => x.consumpAmount)
         })
         .ToList();
-                            consumpStatisticsDataGrid.ItemsSource = matchList;
-                            statisticsSummary.Text = matchList?.Sum(x => x.consumpAmount).ToString();
+                            consumpStatisticsDataGrid.ItemsSource = matchList1;
+                            statisticsSummary.Text = matchList1?.Sum(x => x.consumpAmount).ToString();
                             break;
                         case "3"://年份+类别
                             dgtc_consumpYear.Visibility = Visibility.Visible;
@@ -229,15 +246,15 @@ namespace Account.Views
                             cboxStatisticsYear.Visibility = Visibility.Visible;
                             cboxStatisticsMonth.Visibility = Visibility.Collapsed;
 
-                            statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
-                            var matchList2 = consumprecordList?.Where(r => r.consumpYear == statisticsYear).GroupBy(x => new { x.consumpYear, x.categoryName })
+                            int statisticsYear3 = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
+                            var matchList2 = consumprecordList?.Where(r => r.consumpYear == statisticsYear3).GroupBy(x => new { x.consumpYear, x.categoryName })
         .Select(g => new
         {
             g.Key.consumpYear,
             g.Key.categoryName,
             consumpAmount = g.Sum(x => x.consumpAmount)
         })
-        .ToList().OrderByDescending(t=>t.consumpAmount);
+        .ToList().OrderByDescending(t => t.consumpAmount);
                             consumpStatisticsDataGrid.ItemsSource = matchList2;
                             statisticsSummary.Text = matchList2?.Sum(x => x.consumpAmount).ToString();
                             break;
@@ -249,13 +266,13 @@ namespace Account.Views
                             cboxStatisticsYear.Visibility = Visibility.Collapsed;
                             cboxStatisticsMonth.Visibility = Visibility.Collapsed;
 
-                            var matchList3 = consumprecordList?.GroupBy(x => new { x.consumpYear})
+                            var matchList3 = consumprecordList?.GroupBy(x => new { x.consumpYear })
       .Select(g => new
       {
           g.Key.consumpYear,
           consumpAmount = g.Sum(x => x.consumpAmount)
       })
-      .ToList().OrderBy(t=>t.consumpYear);
+      .ToList().OrderBy(t => t.consumpYear);
                             consumpStatisticsDataGrid.ItemsSource = matchList3;
                             statisticsSummary.Text = matchList3?.Sum(x => x.consumpAmount).ToString();
                             break;
@@ -304,7 +321,7 @@ namespace Account.Views
             g.Key.categoryName,
             consumpAmount = g.Sum(x => x.consumpAmount)
         })
-        .ToList();
+        .ToList().OrderByDescending(t => t.consumpAmount);
                     consumpStatisticsDataGrid.ItemsSource = matchList2;
                     statisticsSummary.Text = matchList2?.Sum(x => x.consumpAmount).ToString();
                     break;
