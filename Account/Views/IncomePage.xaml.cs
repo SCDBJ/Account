@@ -37,7 +37,7 @@ namespace Account.Views
             InitializeComponent();
             // 计算本月第一天并赋值
             DateTime now = DateTime.Now;
-            startDatePicker.SelectedDate = new DateTime(now.Year, now.Month, 1);
+            startDatePicker.SelectedDate = new DateTime(now.Year, now.Month-1, 1);
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -67,7 +67,7 @@ namespace Account.Views
             {
                 cboxStatisticsMonth.Items.Add(j.ToString());
             }
-            string currentMonth = DateTime.Now.Month.ToString();
+            string currentMonth = DateTime.Now.AddMonths(-1).Month.ToString();
             cboxStatisticsMonth.SelectedValue = currentMonth;
         }
         private async void HttpRequest()
