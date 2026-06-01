@@ -10,7 +10,7 @@
       d:DesignHeight="800" d:DesignWidth="1000"
       Title="IncomeCategory" Loaded="Page_Loaded">
     <Page.Resources>
-        <local:IsPositiveConverter x:Key="IsPositiveConverter"/>
+        <Converter:IsPositiveConverter x:Key="IsPositiveConverter"/>
     </Page.Resources>
     <Grid >
         <Grid.RowDefinitions>
