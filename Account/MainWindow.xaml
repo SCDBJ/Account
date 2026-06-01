@@ -7,13 +7,13 @@
         xmlns:local="clr-namespace:Account"
         mc:Ignorable="d"
         Title="Account" Height="450" Width="800"  WindowState="Maximized"   Loaded="Window_Loaded" >
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- 左侧侧边栏：宽度自适应（支持折叠） -->
-            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="140"/>
             <!-- 右侧主体内容区 -->
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <!-- 【左侧导航栏】 -->
@@ -21,8 +21,8 @@
         <hc:SideMenu Grid.Column="0" 
                      Name="MainMenu"
                      SelectionChanged="SideMenu_SelectionChanged"
-                     MinWidth="200"
-                     Background="{DynamicResource RegionBrush}" Grid.ColumnSpan="2" Margin="0,74,0,0">
+                     MinWidth="100"
+                     Background="{DynamicResource RegionBrush}" Margin="10,83,0,0">
 
             <!-- 侧边栏顶部：一般放 Logo 或用户信息 -->
             <hc:SideMenu.Header>
@@ -67,7 +67,9 @@ Stretch="Uniform"/>
             </hc:SideMenuItem>
             <hc:SideMenuItem Visibility="Collapsed" Header="其他" CommandParameter="Other">
                 <!--<hc:SideMenuItem.Icon>
-                    --><!-- 嵌入传统的图片控件，建议固定宽高以防变形 --><!--
+                    -->
+                <!-- 嵌入传统的图片控件，建议固定宽高以防变形 -->
+                <!--
                     <Image Source="/Images/收入详情.png" 
 Width="130" 
 Height="40"
@@ -93,7 +95,7 @@ Stretch="Uniform"/>
         <Frame Grid.Column="1" 
                Name="MainFrame" 
                NavigationUIVisibility="Hidden" 
-               Margin="20,51,20,20"/>
+               Margin="21,51,20,20"/>
         <!--<StackPanel VerticalAlignment="Center">
 
             -->
