@@ -7,7 +7,7 @@
       xmlns:Converter="clr-namespace:Account.Common"
       xmlns:hc="https://handyorg.github.io/handycontrol"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1000"
+      d:DesignHeight="800" d:DesignWidth="1200"
       Title="IncomeCategory" Loaded="Page_Loaded">
     <Page.Resources>
         <Converter:IsPositiveConverter x:Key="IsPositiveConverter"/>
@@ -18,9 +18,9 @@
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition Width="4.5*"/>
-            <ColumnDefinition Width="3.5*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
         <hc:ComboBox Grid.Column="0"  Name="cboxIncomeCategory" HorizontalAlignment="Left" Margin="72,29,0,0" VerticalAlignment="Top" Width="100" SelectionChanged="cboxIncomeCategory_SelectionChanged">
             <ComboBoxItem Tag="1" >全部</ComboBoxItem>
@@ -39,7 +39,7 @@
             AutoGenerateColumns="False" 
             LoadingRow="DataGrid_LoadingRow"        
             IsReadOnly="True"
-            Margin="50,83,0,38"
+            Margin="50,83,50,10"
             GridLinesVisibility="All" 
             VerticalScrollBarVisibility="Auto"
             MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
@@ -70,6 +70,45 @@
         </DataGrid>
         <TextBlock Grid.Row="1" Grid.Column="0" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="50,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
         <TextBlock Grid.Row="1"  Grid.Column="0" x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <DataGrid  Grid.Column="1" 
+            x:Name="incomeYearCategoryDataGrid" 
+            HorizontalAlignment="Left"
+            HeadersVisibility="All" 
+            RowHeaderWidth="60" 
+            AutoGenerateColumns="False" 
+            LoadingRow="DataGrid_LoadingRow"        
+            IsReadOnly="True"
+            Margin="50,83,50,10"
+            GridLinesVisibility="All" 
+            VerticalScrollBarVisibility="Auto"
+            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="100" Binding="{Binding incomeYear}" Header="收入年份"/>
+                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="收入类型"/>
+                <DataGridTextColumn Width="100" Header="金额" Binding="{Binding incomeAmount}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="Red"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding incomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="1" Grid.Column="1" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="50,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
+        <TextBlock Grid.Row="1"  Grid.Column="1" x:Name="tblockYearSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
 
     </Grid>
 </Page>

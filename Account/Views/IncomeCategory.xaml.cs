@@ -79,6 +79,19 @@ namespace Account.Views
                         incomeCategoryDataGrid.ItemsSource = matchList?.OrderByDescending(t => t.incomeDate);
                         var sumAmount = matchList?.Sum(t => t.incomeAmount);
                         tblockSummary.Text = sumAmount.ToString();
+
+                        var matchYearList = incomerecordList?.Where(r => r.categoryName == incomeCategory).GroupBy(x => new { x.incomeYear, x.categoryName })
+                   .Select(g => new
+                   {
+                       g.Key.incomeYear,
+                       g.Key.categoryName,
+                       incomeAmount = g.Sum(x => x.incomeAmount)
+                   })
+                   .ToList();
+                        incomeYearCategoryDataGrid.ItemsSource = matchYearList?.OrderByDescending(t => t.incomeYear);
+                        var sumYearAmount = matchYearList?.Sum(t => t.incomeAmount);
+                        tblockYearSummary.Text = sumYearAmount.ToString();
+
                     }
                 }
             }
@@ -110,6 +123,18 @@ namespace Account.Views
                     incomeCategoryDataGrid.ItemsSource = matchList?.OrderByDescending(t => t.incomeDate);
                     var sumAmount = matchList?.Sum(t => t.incomeAmount);
                     tblockSummary.Text = sumAmount.ToString();
+
+                    var matchYearList = incomerecordList?.GroupBy(x => new { x.incomeYear, x.categoryName })
+          .Select(g => new
+          {
+              g.Key.incomeYear,
+              g.Key.categoryName,
+              incomeAmount = g.Sum(x => x.incomeAmount)
+          })
+          .ToList();
+                    incomeYearCategoryDataGrid.ItemsSource = matchYearList?.OrderByDescending(t => t.incomeYear);
+                    var sumYearAmount = matchYearList?.Sum(t => t.incomeAmount);
+                    tblockYearSummary.Text = sumYearAmount.ToString();
                 }
                 else
                 {
@@ -125,6 +150,18 @@ namespace Account.Views
                     incomeCategoryDataGrid.ItemsSource = matchList?.OrderByDescending(t => t.incomeDate);
                     var sumAmount = matchList?.Sum(t => t.incomeAmount);
                     tblockSummary.Text = sumAmount.ToString();
+
+                    var matchYearList = incomerecordList?.Where(r => r.categoryName == incomeCategory).GroupBy(x => new { x.incomeYear, x.categoryName })
+          .Select(g => new
+          {
+              g.Key.incomeYear,
+              g.Key.categoryName,
+              incomeAmount = g.Sum(x => x.incomeAmount)
+          })
+          .ToList();
+                    incomeYearCategoryDataGrid.ItemsSource = matchYearList?.OrderByDescending(t => t.incomeYear);
+                    var sumYearAmount = matchYearList?.Sum(t => t.incomeAmount);
+                    tblockYearSummary.Text = sumYearAmount.ToString();
                 }
             }
         }
