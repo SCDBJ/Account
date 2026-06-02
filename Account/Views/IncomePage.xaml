@@ -40,13 +40,6 @@
       GridLinesVisibility="All" 
       VerticalScrollBarVisibility="Auto"
       MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
-
-            <!-- 表头左侧：全选/单选框复选槽 -->
-            <!--<DataGrid.RowHeaderTemplate>
-            <DataTemplate>
-                <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
-            </DataTemplate>
-        </DataGrid.RowHeaderTemplate>-->
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -107,6 +100,7 @@
         </DataGrid>
         <TextBlock Grid.Row="1" Grid.Column="0" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
         <TextBlock Grid.Row="1"  Grid.Column="0" x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+       
         <DataGrid  Grid.Column="1" 
         x:Name="incomeStatisticsDataGrid" 
         HorizontalAlignment="Left"

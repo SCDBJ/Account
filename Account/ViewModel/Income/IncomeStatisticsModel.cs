@@ -6,7 +6,7 @@ namespace Account.ViewModel.Income
 {
     public class IncomeStatisticsModel
     {
-        public int incomeDate
+        public int IncomeDate
         {
             get; set;
         }

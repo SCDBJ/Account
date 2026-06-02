@@ -6,6 +6,7 @@ using Account.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq; // 确保引入了 LINQ
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -13,6 +14,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Account.Views
 {
@@ -88,15 +90,21 @@ namespace Account.Views
                 }).ToList();
 
             var newModels = new ObservableCollection<IncomeStatisticsModel>();
-            foreach (var m in chartData)
+            foreach (var m in chartData.OrderByDescending(x=>x.incomeDate))
             {
                 newModels.Add(new IncomeStatisticsModel
                 {
-                    incomeDate = m.incomeDate,
+                    IncomeDate = m.incomeDate,
                     IncomeAmount = m.incomeAmount
                 });
             }
-
+            // 🔥 算出这批数据里的绝对值最大值，给转换器当分母
+            if (newModels.Count > 0)
+            {
+                // 取绝对值最大，这样即使亏损很大也能撑开坐标轴
+                var max = newModels.Max(x => Math.Abs((decimal)x.IncomeAmount));
+                _viewModel.MaxAmount = max > 0 ? max : 100; // 保底 100
+            }
             // 重新赋值给 ViewModel 触发属性变更通知
             _viewModel.IncomeList = newModels;
         }

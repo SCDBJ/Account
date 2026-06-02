@@ -32,5 +32,15 @@ namespace Account.ViewModel.Income
                 OnPropertyChanged(); // 🔥 关键：当引用改变时通知前端
             }
         }
+        private decimal? _maxAmount = 100; // 默认给个100防止除以0
+        public decimal? MaxAmount
+        {
+            get => _maxAmount;
+            set
+            {
+                _maxAmount = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
