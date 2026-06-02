@@ -80,10 +80,10 @@ namespace Account.Views
 
             // ==================== 2. 🔥 刷新柱状图数据 (ItemsControl) ====================
             // 柱状图按日期分组展示
-            var chartData = filteredList.GroupBy(x => new { x.incomeYear })
+            var chartData = filteredList.GroupBy(x => new { x.incomeDate })
                 .Select(g => new
                 {
-                    incomeYear = g.Key.incomeYear,
+                    incomeDate = g.Key.incomeDate,
                     incomeAmount = g.Sum(x => x.incomeAmount)
                 }).ToList();
 
@@ -92,7 +92,7 @@ namespace Account.Views
             {
                 newModels.Add(new IncomeStatisticsModel
                 {
-                    incomeYear = m.incomeYear,
+                    incomeDate = m.incomeDate,
                     IncomeAmount = m.incomeAmount
                 });
             }
