@@ -7,108 +7,141 @@
       xmlns:Converter="clr-namespace:Account.Common"
       xmlns:hc="https://handyorg.github.io/handycontrol"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1200"
+      d:DesignHeight="800" d:DesignWidth="1500"
       Title="IncomeCategory" Loaded="Page_Loaded">
+
     <Page.Resources>
         <Converter:IsPositiveConverter x:Key="IsPositiveConverter"/>
     </Page.Resources>
-    <Grid >
+
+    <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="1.3*"/>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="6*"/>
-        </Grid.ColumnDefinitions>
-        <hc:ComboBox Grid.Column="1"  Name="cboxIncomeCategory" HorizontalAlignment="Left" Margin="10,29,0,0" VerticalAlignment="Top" Width="100" SelectionChanged="cboxIncomeCategory_SelectionChanged">
-            <ComboBoxItem Tag="1" >全部</ComboBoxItem>
-            <ComboBoxItem Tag="2">工资</ComboBoxItem>
-            <ComboBoxItem Tag="3" >年终奖</ComboBoxItem>
-            <ComboBoxItem Tag="4" >公积金</ComboBoxItem>
-            <ComboBoxItem Tag="5"  IsSelected="True">股票</ComboBoxItem>
-            <ComboBoxItem Tag="6" >个税退税</ComboBoxItem>
-            <ComboBoxItem Tag="7" >其他</ComboBoxItem>
-        </hc:ComboBox>
-        <DataGrid  Grid.Column="0" 
-            x:Name="incomeCategoryDataGrid" 
-            HorizontalAlignment="Left"
-            HeadersVisibility="All" 
-            RowHeaderWidth="60" 
-            AutoGenerateColumns="False" 
-            LoadingRow="DataGrid_LoadingRow"        
-            IsReadOnly="True"
-            Margin="50,83,50,10"
-            GridLinesVisibility="All" 
-            VerticalScrollBarVisibility="Auto"
-            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="IsEnabled" Value="False"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <!-- 列定义 -->
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="100" Binding="{Binding incomeDate}" Header="收入年月"/>
-                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="收入类型"/>
-                <DataGridTextColumn Width="100" Header="金额" Binding="{Binding incomeAmount}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="Red"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding incomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
-                                    <Setter Property="Foreground" Value="Green"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="50,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
-        <TextBlock Grid.Row="1"  Grid.Column="0" x:Name="tblockSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-        <DataGrid  Grid.Column="2" 
-            x:Name="incomeYearCategoryDataGrid" 
-            HorizontalAlignment="Left"
-            HeadersVisibility="All" 
-            RowHeaderWidth="60" 
-            AutoGenerateColumns="False" 
-            LoadingRow="DataGrid_LoadingRow"        
-            IsReadOnly="True"
-            Margin="50,83,50,10"
-            GridLinesVisibility="All" 
-            VerticalScrollBarVisibility="Auto"
-            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="IsEnabled" Value="False"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <!-- 列定义 -->
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="100" Binding="{Binding incomeYear}" Header="收入年份"/>
-                <DataGridTextColumn Width="100" Binding="{Binding categoryName}" Header="收入类型"/>
-                <DataGridTextColumn Width="100" Header="金额" Binding="{Binding incomeAmount}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="Red"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding incomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
-                                    <Setter Property="Foreground" Value="Green"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <TextBlock Grid.Row="1" Grid.Column="2" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="50,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
-        <TextBlock Grid.Row="1"  Grid.Column="2" x:Name="tblockYearSummary" FontWeight="Bold" FontSize="13" HorizontalAlignment="Left" Margin="180,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <TextBlock Text="收入分类：" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+            <hc:ComboBox Name="cboxIncomeCategory" Width="150" Height="30" SelectionChanged="cboxIncomeCategory_SelectionChanged">
+                <ComboBoxItem Tag="1">全部</ComboBoxItem>
+                <ComboBoxItem Tag="2">工资</ComboBoxItem>
+                <ComboBoxItem Tag="3">年终奖</ComboBoxItem>
+                <ComboBoxItem Tag="4">公积金</ComboBoxItem>
+                <ComboBoxItem Tag="5" IsSelected="True">股票</ComboBoxItem>
+                <ComboBoxItem Tag="6">个税退税</ComboBoxItem>
+                <ComboBoxItem Tag="7">其他</ComboBoxItem>
+            </hc:ComboBox>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0" x:Name="incomeCategoryDataGrid" 
+                      AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="All" RowHeaderWidth="40"
+                      GridLinesVisibility="All" LoadingRow="DataGrid_LoadingRow" Margin="10">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" Binding="{Binding incomeDate}" Header="收入年月"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding categoryName}" Header="收入类型"/>
+                    <DataGridTextColumn Width="*" Header="金额" Binding="{Binding incomeAmount}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Red"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding incomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <DataGrid Grid.Column="1" x:Name="incomeYearCategoryDataGrid" 
+                      AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="All" RowHeaderWidth="40"
+                      GridLinesVisibility="All" LoadingRow="DataGrid_LoadingRow" Margin="10">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" Binding="{Binding incomeYear}" Header="收入年份"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding categoryName}" Header="收入类型"/>
+                    <DataGridTextColumn Width="*" Header="金额" Binding="{Binding incomeAmount}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="Red"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding incomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding IncomeList}" Margin="10" VerticalAlignment="Stretch">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding IncomeList.Count}" VerticalAlignment="Bottom" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="250"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding IncomeAmount, StringFormat={}{0:N0}}" 
+                                       HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,5" Foreground="#2196F3"/>
+
+                            <ProgressBar Grid.Row="1" Value="{Binding IncomeList.IncomeAmount}" Maximum="2000000" 
+                                         Width="25" Height="250" Orientation="Vertical" 
+                                         Foreground="#2196F3" Background="#E0E0E0"/>
+
+                            <TextBlock Grid.Row="2" Text="{Binding IncomeList.incomeYear}" 
+                                       HorizontalAlignment="Center" Margin="0,8,0,0" Foreground="#666666" FontSize="11"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0">
+                <TextBlock FontSize="13" FontWeight="Bold" Text="天合计："/>
+                <TextBlock x:Name="tblockSummary" FontWeight="Bold" FontSize="13" Foreground="DarkOrange"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0">
+                <TextBlock FontSize="13" FontWeight="Bold" Text="年合计："/>
+                <TextBlock x:Name="tblockYearSummary" FontWeight="Bold" FontSize="13" Foreground="DarkOrange"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
