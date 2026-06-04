@@ -39,7 +39,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="7*"/>
             </Grid.ColumnDefinitions>
 
             <DataGrid Grid.Column="0" x:Name="incomeCategoryDataGrid" 
