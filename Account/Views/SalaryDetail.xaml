@@ -69,7 +69,17 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_158}" Header="社保个人合计"/>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_5}" Header="本次扣税"/>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_157}" Header="社保单位合计"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_3}" Header="实发合计"/>
+                <DataGridTextColumn Width="90" Binding="{Binding dataf_3}" Header="实发合计">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="LightBlue"/>
+                            <Setter Property="Foreground" Value="#d61f47"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_163}" Header="扣减合计(不含公积金)"/>
             </DataGrid.Columns>
         </DataGrid>
