@@ -65,16 +65,13 @@ Height="40"
 Stretch="Uniform"/>
                 </hc:SideMenuItem.Icon>
             </hc:SideMenuItem>
-            <hc:SideMenuItem Visibility="Collapsed" Header="其他" CommandParameter="Other">
-                <!--<hc:SideMenuItem.Icon>
-                    -->
-                <!-- 嵌入传统的图片控件，建议固定宽高以防变形 -->
-                <!--
-                    <Image Source="/Images/收入详情.png" 
+            <hc:SideMenuItem  Header="工资详情" CommandParameter="SalaryDetail">
+                <hc:SideMenuItem.Icon>
+                    <Image Source="/Images/工资条.png" 
 Width="130" 
 Height="40"
 Stretch="Uniform"/>
-                </hc:SideMenuItem.Icon>-->
+                </hc:SideMenuItem.Icon>
             </hc:SideMenuItem>
         </hc:SideMenu>
         <!--<hc:SideMenu Grid.ColumnSpan="2">

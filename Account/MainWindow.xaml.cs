@@ -31,11 +31,6 @@ namespace Account
             // 初始化时，默认跳转到第一个页面
             MainFrame.Navigate(new Views.ExpendPage());
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Growl.Success("数据提交成功！这是一个 HandyControl 通知。");
-        }
         private void SideMenu_SelectionChanged(object sender, HandyControl.Data.FunctionEventArgs<object> e)
         {
             // 1. 健壮性检查：确保窗口初始化未完成时（MainFrame还不存在时）不崩溃
@@ -57,8 +52,8 @@ namespace Account
                     case "IncomeCategory":
                         MainFrame.Navigate(new IncomeCategory());
                         break;
-                    case "Other":
-                        MainFrame.Navigate(new Other());
+                    case "SalaryDetail":
+                        MainFrame.Navigate(new SalaryDetail());
                         break;
                 }
             }
