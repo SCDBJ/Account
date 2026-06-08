@@ -51,7 +51,7 @@ namespace Account.Models.SalaryDetail
         /// <summary>
         /// 核定绩效奖金
         /// </summary>
-        public string? dataf_94
+        public decimal? dataf_94
         {
             get; set;
         }
@@ -65,7 +65,7 @@ namespace Account.Models.SalaryDetail
         /// <summary>
         /// 绩效奖金差异
         /// </summary>
-        public string? dataf_96
+        public decimal? dataf_96
         {
             get; set;
         }

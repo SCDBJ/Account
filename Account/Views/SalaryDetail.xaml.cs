@@ -30,6 +30,7 @@ namespace Account.Views
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            BindingYear();
             List<SalaryItem>? salaryItems = GetSalary();
             Dispatcher.Invoke(new Action(() => SalaryDatagrid.ItemsSource = salaryItems?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod)));
 
@@ -44,20 +45,17 @@ namespace Account.Views
         private List<SalaryItem>? GetSalary()
         {
             var path = AppDomain.CurrentDomain.BaseDirectory + "SalaryUrls";
-#pragma warning disable CS8600 // 将 null 字面量或可能为 null 的值转换为非 null 类型。
-            IList<string> list = FileIOHelper.FindDirectory(path);
-#pragma warning restore CS8600 // 将 null 字面量或可能为 null 的值转换为非 null 类型。
+            IList<string>? list = FileIOHelper.FindDirectory(path);
             if (list == null)
             {
                 return null;
             }
 
             List<SalaryItem> salaryItems = new List<SalaryItem>();
+            
             foreach (string file in list)
             {
-#pragma warning disable CS8600 // 将 null 字面量或可能为 null 的值转换为非 null 类型。
-                Rootobject rootobject = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(file);
-#pragma warning restore CS8600 // 将 null 字面量或可能为 null 的值转换为非 null 类型。
+                Rootobject? rootobject = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(file);
 
                 if (rootobject == null)
                 {
@@ -67,80 +65,69 @@ namespace Account.Views
                 {
                     continue;
                 }
-#pragma warning disable CS8602 // 解引用可能出现空引用。
-                SalaryItem salaryItem = new SalaryItem();
-                salaryItem.datacyear = rootobject.salaryList.wa_datacyear.content;
-                salaryItem.datacperiod = rootobject.salaryList.wa_datacperiod.content;
-                salaryItem.dataf_32 = rootobject.salaryList.wa_dataf_32.content;
+                SalaryItem? salaryItem = new SalaryItem();
+                salaryItem.datacyear = rootobject.salaryList?.wa_datacyear?.content;
+                salaryItem.datacperiod = rootobject.salaryList?.wa_datacperiod?.content;
+                salaryItem.dataf_32 = rootobject.salaryList?.wa_dataf_32?.content;
 
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                sumDecdataf_32 += decimal.Parse(salaryItem.dataf_32);
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
+                sumDecdataf_32 += decimal.Parse(salaryItem.dataf_32??"0");
 
-                salaryItem.dataf_131 = rootobject.salaryList.wa_dataf_131.content;
-                salaryItem.dataf_134 = rootobject.salaryList.wa_dataf_134.content;
-                salaryItem.dataf_40 = rootobject.salaryList.wa_dataf_40.content;
-                salaryItem.dataf_95 = rootobject.salaryList.wa_dataf_95.content;
+                salaryItem.dataf_131 = rootobject.salaryList?.wa_dataf_131?.content;
+                salaryItem.dataf_134 = rootobject.salaryList?.wa_dataf_134?.content;
+                salaryItem.dataf_40 = rootobject.salaryList?.wa_dataf_40?.content;
+                salaryItem.dataf_95 = rootobject.salaryList?.wa_dataf_95?.content;
 
-                #region 每年加司龄工资50，这部分不算在基本工资和绩效奖金计算公式里
-                int dateEntryYear = 2021;//入职年份
-                int dateEntryMonth = 8;//入职月份
-
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                int datacyear = int.Parse(salaryItem.datacyear);
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                int datacperiod = int.Parse(salaryItem.datacperiod);
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
-
-                int diffmonth = Common.Common.DiffMonth(datacyear, datacperiod, dateEntryYear, dateEntryMonth);
-
-                int entryYears = diffmonth / 12;//入职年数
-                #endregion
-
-                salaryItem.dataf_94 = ((decimal.Parse(salaryItem.dataf_32) - 50 * entryYears) * 0.15M).ToString();
-
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                salaryItem.dataf_96 = (decimal.Parse(salaryItem.dataf_95) - decimal.Parse(salaryItem.dataf_94)).ToString();
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
-                salaryItem.dataf_97 = (decimal.Round(decimal.Parse(salaryItem.dataf_96) / decimal.Parse(salaryItem.dataf_94), 2) * 100).ToString() + "%";
-
-                if (rootobject.salaryList.wa_dataf_63 != null)
+                decimal? dataf_94 = 0.00M;
+                var fdate = int.Parse(salaryItem.datacyear + salaryItem.datacperiod??"0".PadLeft(2,'0'));
+                if (fdate <= 202110)
                 {
-                    salaryItem.dataf_63 = rootobject.salaryList.wa_dataf_63.content;
+                    dataf_94 = 13000M*0.15M;
+                }
+                else if (fdate >= 202111 && fdate <= 202303)
+                {
+                    dataf_94 = 14000.00M * 0.15M;
+                }
+                else if (fdate >= 202304)
+                {
+                    dataf_94 = 14500.00M * 0.15M;
+                }
+
+                salaryItem.dataf_94 = dataf_94;
+
+                salaryItem.dataf_96 = decimal.Parse(salaryItem.dataf_95 ?? "0") - salaryItem.dataf_94;
+
+                salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
+
+                if (rootobject.salaryList?.wa_dataf_63 != null)
+                {
+                    salaryItem.dataf_63 = rootobject.salaryList?.wa_dataf_63?.content;
                 }
                 else
                 {
                     salaryItem.dataf_63 = "0";
                 }
 
-                salaryItem.dataf_79 = rootobject.salaryList.wa_dataf_79.content;
-                salaryItem.dataf_158 = rootobject.salaryList.wa_dataf_158.content;
-                salaryItem.dataf_159 = rootobject.salaryList.wa_dataf_159.content;
-                if (rootobject.salaryList.wa_dataf_5 != null)
+                salaryItem.dataf_79 = rootobject.salaryList?.wa_dataf_79?.content;
+                salaryItem.dataf_158 = rootobject.salaryList?.wa_dataf_158?.content;
+                salaryItem.dataf_159 = rootobject.salaryList?.wa_dataf_159?.content;
+                if (rootobject.salaryList?.wa_dataf_5 != null)
                 {
-                    salaryItem.dataf_5 = rootobject.salaryList.wa_dataf_5.content;
+                    salaryItem.dataf_5 = rootobject.salaryList?.wa_dataf_5?.content;
                 }
                 else
                 {
                     salaryItem.dataf_5 = "0";
                 }
 
-                salaryItem.dataf_3 = rootobject.salaryList.wa_dataf_3.content;
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                sumDecdataf_3 += decimal.Parse(salaryItem.dataf_3);
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
+                salaryItem.dataf_3 = rootobject.salaryList?.wa_dataf_3?.content;
+                sumDecdataf_3 += decimal.Parse(salaryItem.dataf_3 ?? "0");
 
-                salaryItem.dataf_157 = rootobject.salaryList.wa_dataf_157.content;
-                salaryItem.dataf_162 = rootobject.salaryList.wa_dataf_162.content;
+                salaryItem.dataf_157 = rootobject.salaryList?.wa_dataf_157?.content;
+                salaryItem.dataf_162 = rootobject.salaryList?.wa_dataf_162?.content;
 
-#pragma warning restore CS8602 // 解引用可能出现空引用。
-
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
-                var totalDeduction = -decimal.Parse(salaryItem.dataf_96) + decimal.Parse(salaryItem.dataf_63) + decimal.Parse(salaryItem.dataf_158) + decimal.Parse(salaryItem.dataf_5);
+                var totalDeduction = -salaryItem.dataf_96 + decimal.Parse(salaryItem.dataf_63 ?? "0") + decimal.Parse(salaryItem.dataf_158 ?? "0") + decimal.Parse(salaryItem.dataf_5 ?? "0");
                 salaryItem.dataf_163 = totalDeduction.ToString();
-                sumDecdataf_163 += decimal.Parse(salaryItem.dataf_163);
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
+                sumDecdataf_163 += decimal.Parse(salaryItem.dataf_163 ?? "0");
                 salaryItems.Add(salaryItem);
             }
             return salaryItems;
@@ -148,6 +135,21 @@ namespace Account.Views
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void cboxStatisticsYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
+
+        }
+        private void BindingYear()
+        {
+            cboxStatisticsYear.Items.Clear();
+            for (int i = DateTime.Now.Year; i >= 2014; i--)
+            {
+                cboxStatisticsYear.Items.Add(i.ToString());
+            }
+            cboxStatisticsYear.SelectedIndex = 0;
         }
     }
 }

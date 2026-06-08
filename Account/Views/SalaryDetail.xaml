@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Account.Views"
+       xmlns:hc="https://handyorg.github.io/handycontrol" 
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1500"
       Title="SalaryDetail"  Loaded="Page_Loaded">
@@ -14,8 +15,8 @@
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="21*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <DataGrid  Grid.Column="0" Grid.Row="0"
 Name="SalaryDatagrid" 
@@ -70,15 +71,6 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_5}" Header="本次扣税"/>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_157}" Header="社保单位合计"/>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_3}" Header="实发合计">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="LightBlue"/>
-                            <Setter Property="Foreground" Value="#d61f47"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Width="90" Binding="{Binding dataf_163}" Header="扣减合计(不含公积金)"/>
             </DataGrid.Columns>
@@ -87,6 +79,43 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_32" HorizontalAlignment="Left" Margin="160,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_3" HorizontalAlignment="Left" Margin="1160,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_163" HorizontalAlignment="Left" Margin="1245,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+
+        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
+        <DataGrid  Grid.Column="1" 
+    x:Name="consumpStatisticsDataGrid" 
+    HorizontalAlignment="Left"
+    HeadersVisibility="All" 
+    RowHeaderWidth="60" 
+    AutoGenerateColumns="False" 
+    IsReadOnly="True"
+    Margin="20,83,0,10"
+    LoadingRow="DataGrid_LoadingRow" 
+    GridLinesVisibility="All" 
+    VerticalScrollBarVisibility="Auto"
+    MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="60" Visibility="Collapsed" CanUserResize="False" Header="consumpId">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding consumpId}" Width="32" Height="32" Stretch="Uniform"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="dgtc_consumpYear" Width="80" Binding="{Binding consumpYear}" Header="支出年份"/>
+                <DataGridTextColumn x:Name="dgtc_consumpType" Width="100" Binding="{Binding categoryName}" Header="支出类型"/>
+                <DataGridTextColumn x:Name="dgtc_consumpAmount" Width="100" Binding="{Binding consumpAmount}" Header="支出金额"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumAmount" HorizontalAlignment="Left" Margin="1445,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
 
     </Grid>
 </Page>
