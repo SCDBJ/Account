@@ -30,13 +30,13 @@ namespace Account.Models.SalaryDetail
             foreach (var raw in rawList)
             {
                 // 每一个原始对象，都拆分成 7 条展示数据
-                GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发绩效", Amount = raw.dataf_95 });
+                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发绩效", Amount = raw.dataf_95 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "绩效扣款", Amount = raw.dataf_96 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "税前扣款", Amount = raw.dataf_63 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "社保", Amount = raw.dataf_158 });
-                GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金", Amount = raw.dataf_159 });
+                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金", Amount = raw.dataf_159 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "个税", Amount = raw.dataf_5 });
-                GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发工资", Amount = raw.dataf_3 });
+                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发工资", Amount = raw.dataf_3 });
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -53,10 +53,10 @@ namespace Account.Models.SalaryDetail
         {
             get; set;
         }
-        public decimal? dataf_95
-        {
-            get; set;
-        }
+        //public decimal? dataf_95
+        //{
+        //    get; set;
+        //}
         public decimal? dataf_96
         {
             get; set;
@@ -69,17 +69,17 @@ namespace Account.Models.SalaryDetail
         {
             get; set;
         }
-        public decimal? dataf_159
-        {
-            get; set;
-        }
+        //public decimal? dataf_159
+        //{
+        //    get; set;
+        //}
         public decimal? dataf_5
         {
             get; set;
         }
-        public decimal? dataf_3
-        {
-            get; set;
-        }
+        //public decimal? dataf_3
+        //{
+        //    get; set;
+        //}
     }
 }

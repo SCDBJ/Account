@@ -90,33 +90,33 @@ namespace Account.Views
                             rawDataObject = new RawDataObject
                             {
                                 datacyear = item.datacyear.ToString(),
-                                dataf_95 = item.dataf_95,
+                                //dataf_95 = item.dataf_95,
                                 dataf_96 = item.dataf_96,
                                 dataf_63 = item.dataf_63,
                                 dataf_158 = item.dataf_158,
-                                dataf_159 = item.dataf_159,
+                                //dataf_159 = item.dataf_159,
                                 dataf_5 = item.dataf_5,
-                                dataf_3 = item.dataf_3
+                                //dataf_3 = item.dataf_3
                             };
                             rawData.Add(rawDataObject);
-                            total += item.dataf_95 + item.dataf_96 + item.dataf_63 + item.dataf_158 + item.dataf_159 + item.dataf_5 + item.dataf_3;
+                            total += /*item.dataf_95 +*/ item.dataf_96 + item.dataf_63 + item.dataf_158 /*+ item.dataf_159 */+ item.dataf_5 /*+ item.dataf_3*/;
                         }
                         var rawDatas= rawData.GroupBy(t=>new { t.datacyear}).
                             Select(g=> new
                             {
                                 g.Key.datacyear,
-                                dataf_95 = g.Sum(x => x.dataf_95),
+                                //dataf_95 = g.Sum(x => x.dataf_95),
                                 dataf_96 = g.Sum(x => -x.dataf_96),
                                 dataf_63 = g.Sum(x => x.dataf_63),
                                 dataf_158 = g.Sum(x => x.dataf_158),
-                                dataf_159 = g.Sum(x => x.dataf_159),
+                                //dataf_159 = g.Sum(x => x.dataf_159*2),
                                 dataf_5 = g.Sum(x => x.dataf_5),
-                                dataf_3 = g.Sum(x => x.dataf_3),
+                                //dataf_3 = g.Sum(x => x.dataf_3),
                             }).ToList();
                         List<RawDataObject> rawList = new List<RawDataObject>();
                         foreach (var raw in rawDatas)
                         {
-                            rawList.Add(new RawDataObject { datacyear=raw.datacyear, dataf_95 = raw.dataf_95, dataf_96=raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158, dataf_159=raw.dataf_159, dataf_5=raw.dataf_5, dataf_3=raw.dataf_3 });
+                            rawList.Add(new RawDataObject { datacyear=raw.datacyear, /*dataf_95 = raw.dataf_95,*/ dataf_96=raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158, /*dataf_159=raw.dataf_159, */dataf_5=raw.dataf_5/*, dataf_3=raw.dataf_3 */});
                         }
                         viewModel.LoadData(rawList);
 
@@ -250,13 +250,13 @@ namespace Account.Views
                         .Select(g => new RawDataObject
                         {
                             datacyear = g.Key.ToString(),
-                            dataf_95 = g.Sum(x => x.dataf_95),
+                            //dataf_95 = g.Sum(x => x.dataf_95),
                             dataf_96 = g.Sum(x => -x.dataf_96), // 绩效扣款在界面上要体现为负数
                             dataf_63 = g.Sum(x => x.dataf_63),
                             dataf_158 = g.Sum(x => x.dataf_158),
-                            dataf_159 = g.Sum(x => x.dataf_159),
+                            //dataf_159 = g.Sum(x => x.dataf_159*2),
                             dataf_5 = g.Sum(x => x.dataf_5),
-                            dataf_3 = g.Sum(x => x.dataf_3),
+                            //dataf_3 = g.Sum(x => x.dataf_3),
                         }).ToList();
 
                     // 2. 🔍 【修复】改用类级别的 _viewModel，而不是局部 new，确保前端能收到通知
