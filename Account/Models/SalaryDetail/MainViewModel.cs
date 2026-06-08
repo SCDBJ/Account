@@ -49,7 +49,7 @@ namespace Account.Models.SalaryDetail
     // 你的原始数据结构
     public class RawDataObject
     {
-        public string datacyear
+        public string? datacyear
         {
             get; set;
         }
