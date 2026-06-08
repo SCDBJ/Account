@@ -134,18 +134,18 @@ namespace Account
                     continue;
                 }
                 SalaryItem? salaryItem = new SalaryItem();
-                salaryItem.datacyear = rootobject.salaryList?.wa_datacyear?.content;
-                salaryItem.datacperiod = rootobject.salaryList?.wa_datacperiod?.content;
-                var fdate = int.Parse(salaryItem.datacyear + salaryItem.datacperiod ?? "0".PadLeft(2, '0'));
+                salaryItem.datacyear = int.Parse(rootobject.salaryList?.wa_datacyear?.content ?? "0");
+                salaryItem.datacperiod = int.Parse(rootobject.salaryList?.wa_datacperiod?.content ?? "0");
+                var fdate = int.Parse(salaryItem.datacyear.ToString() + salaryItem.datacperiod.ToString().PadLeft(2, '0'));
                 if (lastdate!= fdate)
                     continue;
 
-                salaryItem.dataf_32 = rootobject.salaryList?.wa_dataf_32?.content;
+                salaryItem.dataf_32 = decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0");
 
-                salaryItem.dataf_131 = rootobject.salaryList?.wa_dataf_131?.content;
-                salaryItem.dataf_134 = rootobject.salaryList?.wa_dataf_134?.content;
-                salaryItem.dataf_40 = rootobject.salaryList?.wa_dataf_40?.content;
-                salaryItem.dataf_95 = rootobject.salaryList?.wa_dataf_95?.content;
+                salaryItem.dataf_131 = double.Parse(rootobject.salaryList?.wa_dataf_131?.content ?? "0");
+                salaryItem.dataf_134 = double.Parse(rootobject.salaryList?.wa_dataf_134?.content ?? "0");
+                salaryItem.dataf_40 = decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0");
+                salaryItem.dataf_95 = decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0");
 
                 decimal? dataf_94 = 0.00M;
              
@@ -164,38 +164,38 @@ namespace Account
 
                 salaryItem.dataf_94 = dataf_94;
 
-                salaryItem.dataf_96 = decimal.Parse(salaryItem.dataf_95 ?? "0") - salaryItem.dataf_94;
+                salaryItem.dataf_96 = salaryItem.dataf_95 - salaryItem.dataf_94;
 
                 salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
 
                 if (rootobject.salaryList?.wa_dataf_63 != null)
                 {
-                    salaryItem.dataf_63 = rootobject.salaryList?.wa_dataf_63?.content;
+                    salaryItem.dataf_63 = decimal.Parse(rootobject.salaryList?.wa_dataf_63?.content ?? "0");
                 }
                 else
                 {
-                    salaryItem.dataf_63 = "0";
+                    salaryItem.dataf_63 = 0;
                 }
 
-                salaryItem.dataf_79 = rootobject.salaryList?.wa_dataf_79?.content;
-                salaryItem.dataf_158 = rootobject.salaryList?.wa_dataf_158?.content;
-                salaryItem.dataf_159 = rootobject.salaryList?.wa_dataf_159?.content;
+                salaryItem.dataf_79 = decimal.Parse(rootobject.salaryList?.wa_dataf_79?.content ?? "0");
+                salaryItem.dataf_158 = decimal.Parse(rootobject.salaryList?.wa_dataf_158?.content ?? "0");
+                salaryItem.dataf_159 = decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0");
                 if (rootobject.salaryList?.wa_dataf_5 != null)
                 {
-                    salaryItem.dataf_5 = rootobject.salaryList?.wa_dataf_5?.content;
+                    salaryItem.dataf_5 = decimal.Parse(rootobject.salaryList?.wa_dataf_5?.content ?? "0");
                 }
                 else
                 {
-                    salaryItem.dataf_5 = "0";
+                    salaryItem.dataf_5 = 0;
                 }
 
-                salaryItem.dataf_3 = rootobject.salaryList?.wa_dataf_3?.content;
+                salaryItem.dataf_3 = decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0");
 
-                salaryItem.dataf_157 = rootobject.salaryList?.wa_dataf_157?.content;
-                salaryItem.dataf_162 = rootobject.salaryList?.wa_dataf_162?.content;
+                salaryItem.dataf_157 = decimal.Parse(rootobject.salaryList?.wa_dataf_157?.content ?? "0");
+                salaryItem.dataf_162 = decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0");
 
-                var totalDeduction = -salaryItem.dataf_96 + decimal.Parse(salaryItem.dataf_63 ?? "0") + decimal.Parse(salaryItem.dataf_158 ?? "0") + decimal.Parse(salaryItem.dataf_5 ?? "0");
-                salaryItem.dataf_163 = totalDeduction.ToString();
+                var totalDeduction = -salaryItem.dataf_96 + salaryItem.dataf_63 + salaryItem.dataf_158 + salaryItem.dataf_5;
+                salaryItem.dataf_163 = totalDeduction;
                 salaryItems.Add(salaryItem);
             }
             return salaryItems;

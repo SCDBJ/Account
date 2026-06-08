@@ -1,9 +1,16 @@
 ﻿using Account.Common;
+using Account.Models.Consump.Request;
+using Account.Models.Consump.Response;
 using Account.Models.SalaryDetail;
+
+using HandyControl.Controls;
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json; // .NET 5+ 提供的便捷扩展包
 using System.Text;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,14 +28,20 @@ namespace Account.Views
     /// </summary>
     public partial class SalaryDetail : Page
     {
-        private decimal sumDecdataf_32 = 0.00M;//核定工资总额合计
-        private decimal sumDecdataf_3 = 0.00M;//实发合计
-        private decimal sumDecdataf_163 = 0.00M;//扣减合计
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private decimal? sumDecdataf_32 = 0.00M;//核定工资总额合计
+        private decimal? sumDecdataf_3 = 0.00M;//实发合计
+        private decimal? sumDecdataf_163 = 0.00M;//扣减合计
+        private string salaryrecordItems = "/api/salaryrecord-items";
+        // 1. 将服务器返回的原始数据缓存到类级别，方便切换年份时直接使用，不用重新请求网络
+        private List<SalaryItem>? _cachedSalaryItems;
+        private MainViewModel _viewModel;
         public SalaryDetail()
         {
             InitializeComponent();
         }
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             BindingYear();
             List<SalaryItem>? salaryItems = GetSalary();
@@ -37,6 +50,57 @@ namespace Account.Views
             Dispatcher.Invoke(new Action(() => sumdataf_32.Text = sumDecdataf_32.ToString()));//核定工资总额合计
             Dispatcher.Invoke(new Action(() => sumdataf_3.Text = sumDecdataf_3.ToString()));//实发合计
             Dispatcher.Invoke(new Action(() => sumdataf_163.Text = sumDecdataf_163.ToString()));//扣减合计
+
+            if (cboxStatisticsYear.SelectedItem == null)
+                return;
+            int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
+
+            var postJson = new SalaryrecordRequest { startYear = 2021, endYear = DateTime.Now.Year };
+
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(App.host + salaryrecordItems, postJson);
+            if (!response.IsSuccessStatusCode)
+            {
+                // 专门读取服务器返回的错误文本
+                string errorDetails = await response.Content.ReadAsStringAsync();
+                var statusCode = response.StatusCode;
+                // 可以在这里根据 errorDetails 进一步调试
+                Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
+                return;
+            }
+
+            string responseJson = await response.Content.ReadAsStringAsync();
+            if (responseJson != null)
+            {
+                List<SalaryItem>? salaryItem = JsonSerializer.Deserialize<List<SalaryItem>>(responseJson);
+                if (salaryItem != null)
+                {
+                    var viewModel = new MainViewModel();
+                    this.DataContext = viewModel;
+                    // 使用 FirstOrDefault 简化查询
+                    SalaryItem? matchList = salaryItem.FirstOrDefault(t => t.datacyear == statisticsYear);
+
+                    if (matchList != null)
+                    {
+                        var rawData = new List<RawDataObject>
+                {
+                    new RawDataObject
+                    {
+                        datacyear = matchList.datacyear.ToString(),
+                        dataf_95 = matchList.dataf_95,
+                        dataf_96 = matchList.dataf_96,
+                        dataf_63 = matchList.dataf_63,
+                        dataf_158 = matchList.dataf_158,
+                        dataf_159 = matchList.dataf_159,
+                        dataf_5 = matchList.dataf_5,
+                        dataf_3 = matchList.dataf_3
+                    }
+                };
+                        viewModel.LoadData(rawData);
+                        decimal? total = matchList.dataf_95 + matchList.dataf_96 + matchList.dataf_63 + matchList.dataf_158 + matchList.dataf_159 + matchList.dataf_5 + matchList.dataf_3;
+                        txtTotalAmount.Text = total.ToString();
+                    }
+                }
+            }
         }
         /// <summary>
         /// 获取薪资明细
@@ -50,9 +114,11 @@ namespace Account.Views
             {
                 return null;
             }
-
+            sumDecdataf_32 = 0;
+            sumDecdataf_3 = 0;
+            sumDecdataf_163 = 0;
             List<SalaryItem> salaryItems = new List<SalaryItem>();
-            
+
             foreach (string file in list)
             {
                 Rootobject? rootobject = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(file);
@@ -66,22 +132,25 @@ namespace Account.Views
                     continue;
                 }
                 SalaryItem? salaryItem = new SalaryItem();
-                salaryItem.datacyear = rootobject.salaryList?.wa_datacyear?.content;
-                salaryItem.datacperiod = rootobject.salaryList?.wa_datacperiod?.content;
-                salaryItem.dataf_32 = rootobject.salaryList?.wa_dataf_32?.content;
+                salaryItem.datacyear = int.Parse(rootobject.salaryList?.wa_datacyear?.content ?? "0");
+                salaryItem.datacperiod = int.Parse(rootobject.salaryList?.wa_datacperiod?.content ?? "0");
+                salaryItem.dataf_32 = decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0");
 
-                sumDecdataf_32 += decimal.Parse(salaryItem.dataf_32??"0");
+                sumDecdataf_32 += salaryItem.dataf_32;
 
-                salaryItem.dataf_131 = rootobject.salaryList?.wa_dataf_131?.content;
-                salaryItem.dataf_134 = rootobject.salaryList?.wa_dataf_134?.content;
-                salaryItem.dataf_40 = rootobject.salaryList?.wa_dataf_40?.content;
-                salaryItem.dataf_95 = rootobject.salaryList?.wa_dataf_95?.content;
+                salaryItem.dataf_131 = double.Parse(rootobject.salaryList?.wa_dataf_131?.content ?? "0");
+                salaryItem.dataf_134 = double.Parse(rootobject.salaryList?.wa_dataf_134?.content ?? "0");
+                salaryItem.dataf_40 = decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0");
+                salaryItem.dataf_95 = decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0");
+
+                // 【关键修复】优化年份期间拼接逻辑，确保月份永远是两位的“01-12”，避免出现 20215 导致无法比对
+                string periodStr = salaryItem.datacperiod.ToString().PadLeft(2, '0');
+                int fdate = int.Parse($"{salaryItem.datacyear}{periodStr}");
 
                 decimal? dataf_94 = 0.00M;
-                var fdate = int.Parse(salaryItem.datacyear + salaryItem.datacperiod??"0".PadLeft(2,'0'));
                 if (fdate <= 202110)
                 {
-                    dataf_94 = 13000M*0.15M;
+                    dataf_94 = 13000M * 0.15M;
                 }
                 else if (fdate >= 202111 && fdate <= 202303)
                 {
@@ -94,40 +163,40 @@ namespace Account.Views
 
                 salaryItem.dataf_94 = dataf_94;
 
-                salaryItem.dataf_96 = decimal.Parse(salaryItem.dataf_95 ?? "0") - salaryItem.dataf_94;
+                salaryItem.dataf_96 = salaryItem.dataf_95 - salaryItem.dataf_94;
 
                 salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
 
                 if (rootobject.salaryList?.wa_dataf_63 != null)
                 {
-                    salaryItem.dataf_63 = rootobject.salaryList?.wa_dataf_63?.content;
+                    salaryItem.dataf_63 = decimal.Parse(rootobject.salaryList?.wa_dataf_63?.content ?? "0");
                 }
                 else
                 {
-                    salaryItem.dataf_63 = "0";
+                    salaryItem.dataf_63 = 0;
                 }
 
-                salaryItem.dataf_79 = rootobject.salaryList?.wa_dataf_79?.content;
-                salaryItem.dataf_158 = rootobject.salaryList?.wa_dataf_158?.content;
-                salaryItem.dataf_159 = rootobject.salaryList?.wa_dataf_159?.content;
+                salaryItem.dataf_79 = decimal.Parse(rootobject.salaryList?.wa_dataf_79?.content ?? "0");
+                salaryItem.dataf_158 = decimal.Parse(rootobject.salaryList?.wa_dataf_158?.content ?? "0");
+                salaryItem.dataf_159 = decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0");
                 if (rootobject.salaryList?.wa_dataf_5 != null)
                 {
-                    salaryItem.dataf_5 = rootobject.salaryList?.wa_dataf_5?.content;
+                    salaryItem.dataf_5 = decimal.Parse(rootobject.salaryList?.wa_dataf_5?.content ?? "0");
                 }
                 else
                 {
-                    salaryItem.dataf_5 = "0";
+                    salaryItem.dataf_5 = 0;
                 }
 
-                salaryItem.dataf_3 = rootobject.salaryList?.wa_dataf_3?.content;
-                sumDecdataf_3 += decimal.Parse(salaryItem.dataf_3 ?? "0");
+                salaryItem.dataf_3 = decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0");
+                sumDecdataf_3 += salaryItem.dataf_3;
 
-                salaryItem.dataf_157 = rootobject.salaryList?.wa_dataf_157?.content;
-                salaryItem.dataf_162 = rootobject.salaryList?.wa_dataf_162?.content;
+                salaryItem.dataf_157 = decimal.Parse(rootobject.salaryList?.wa_dataf_157?.content ?? "0");
+                salaryItem.dataf_162 = decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0");
 
-                var totalDeduction = -salaryItem.dataf_96 + decimal.Parse(salaryItem.dataf_63 ?? "0") + decimal.Parse(salaryItem.dataf_158 ?? "0") + decimal.Parse(salaryItem.dataf_5 ?? "0");
-                salaryItem.dataf_163 = totalDeduction.ToString();
-                sumDecdataf_163 += decimal.Parse(salaryItem.dataf_163 ?? "0");
+                var totalDeduction = -salaryItem.dataf_96 + salaryItem.dataf_63 + salaryItem.dataf_158 + salaryItem.dataf_5;
+                salaryItem.dataf_163 = totalDeduction;
+                sumDecdataf_163 += salaryItem.dataf_163;
                 salaryItems.Add(salaryItem);
             }
             return salaryItems;
@@ -139,7 +208,40 @@ namespace Account.Views
 
         private void cboxStatisticsYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
+            // 【防崩开关 1】如果缓存数据还没拿到，或者是初始化引起的切换，直接拦截
+            if (_cachedSalaryItems == null || cboxStatisticsYear.SelectedItem == null)
+                return;
+
+            // 安全拿到年份
+            int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
+
+            // 直接从缓存里筛选，不用反复去读网络，秒级响应
+            SalaryItem? matchList = _cachedSalaryItems.FirstOrDefault(t => t.datacyear == statisticsYear);
+
+            if (matchList != null)
+            {
+                var rawData = new List<RawDataObject>
+        {
+            new RawDataObject
+            {
+                datacyear = matchList.datacyear.ToString(),
+                dataf_95 = matchList.dataf_95,
+                dataf_96 = matchList.dataf_96,
+                dataf_63 = matchList.dataf_63,
+                dataf_158 = matchList.dataf_158,
+                dataf_159 = matchList.dataf_159,
+                dataf_5 = matchList.dataf_5,
+                dataf_3 = matchList.dataf_3
+            }
+        };
+                _viewModel.LoadData(rawData); // 刷新第二张 DataGrid
+                decimal? total = matchList.dataf_95 + matchList.dataf_96 + matchList.dataf_63 + matchList.dataf_158 + matchList.dataf_159 + matchList.dataf_5 + matchList.dataf_3;
+                txtTotalAmount.Text = total.ToString();
+            }
+            else
+            {
+                _viewModel.GridData.Clear(); // 没找到数据就清空
+            }
 
         }
         private void BindingYear()
@@ -147,7 +249,7 @@ namespace Account.Views
             cboxStatisticsYear.Items.Clear();
             for (int i = DateTime.Now.Year; i >= 2014; i--)
             {
-                cboxStatisticsYear.Items.Add(i.ToString());
+                cboxStatisticsYear.Items.Add(i);
             }
             cboxStatisticsYear.SelectedIndex = 0;
         }
