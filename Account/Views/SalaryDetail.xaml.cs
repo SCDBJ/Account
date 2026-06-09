@@ -91,7 +91,7 @@ namespace Account.Views
                             {
                                 datacyear = item.datacyear.ToString(),
                                 //dataf_95 = item.dataf_95,
-                                dataf_96 = item.dataf_96,
+                                dataf_96 = -item.dataf_96,
                                 dataf_63 = item.dataf_63,
                                 dataf_158 = item.dataf_158,
                                 //dataf_159 = item.dataf_159,
@@ -99,7 +99,7 @@ namespace Account.Views
                                 //dataf_3 = item.dataf_3
                             };
                             rawData.Add(rawDataObject);
-                            total += /*item.dataf_95 +*/ item.dataf_96 + item.dataf_63 + item.dataf_158 /*+ item.dataf_159 */+ item.dataf_5 /*+ item.dataf_3*/;
+                            total += /*item.dataf_95 +*/ -item.dataf_96 + item.dataf_63 + item.dataf_158 /*+ item.dataf_159 */+ item.dataf_5 /*+ item.dataf_3*/;
                         }
                         var rawDatas= rawData.GroupBy(t=>new { t.datacyear}).
                             Select(g=> new
@@ -116,7 +116,7 @@ namespace Account.Views
                         List<RawDataObject> rawList = new List<RawDataObject>();
                         foreach (var raw in rawDatas)
                         {
-                            rawList.Add(new RawDataObject { datacyear=raw.datacyear, /*dataf_95 = raw.dataf_95,*/ dataf_96=raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158, /*dataf_159=raw.dataf_159, */dataf_5=raw.dataf_5/*, dataf_3=raw.dataf_3 */});
+                            rawList.Add(new RawDataObject { datacyear=raw.datacyear, /*dataf_95 = raw.dataf_95,*/ dataf_96=-raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158, /*dataf_159=raw.dataf_159, */dataf_5=raw.dataf_5/*, dataf_3=raw.dataf_3 */});
                         }
                         viewModel.LoadData(rawList);
 
