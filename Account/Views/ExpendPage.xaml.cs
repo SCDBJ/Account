@@ -89,7 +89,7 @@ namespace Account.Views
                 var statusCode = response.StatusCode;
                 // 可以在这里根据 errorDetails 进一步调试
                 Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
-
+                return;
             }
 
             string responseJson = await response.Content.ReadAsStringAsync();
