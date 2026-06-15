@@ -28,7 +28,7 @@ namespace Account
     {
         private static readonly HttpClient _httpClient = new HttpClient();
         private string consumpAutoAccount = "/api/consumprecord-autoaccount";
-        private string salaryrecordAdd = "/api/salaryrecord-autoaccount";
+        private string salaryrecordAdd = "/api/salaryrecord-add";
         public MainWindow()
         {
             InitializeComponent();
