@@ -6,6 +6,7 @@ using HandyControl.Controls;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Json; // .NET 5+ 提供的便捷扩展包
 using System.Text.Json;
@@ -33,16 +34,51 @@ namespace Account.Views
         private string consumprecordDelete = "/api/consumprecord-delete";
         private string consumprecordAdd = "/api/consumprecord-add";
         List<ConsumprecordResponse>? consumprecordList;
+
+        public ConsumprecordResponse ConsumprecordData
+        {
+            get; private set;
+        }
+        // 1. 定义一个可以被通知的动态集合（必须是属性，即带 get; set;）
+        public ObservableCollection<CategoryResponse>? CategoryTypes
+        {
+            get; set;
+        }
         public ExpendPage()
         {
             InitializeComponent();
             // 计算本月第一天并赋值
             DateTime now = DateTime.Now;
             startDatePicker.SelectedDate = new DateTime(now.Year, now.Month, 1);
+            CategoryTypes = new ObservableCollection<CategoryResponse>();
+            ConsumprecordData = new ConsumprecordResponse() { consumpTime = DateTime.Now };
+            this.DataContext = this;
         }
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             consumprecordList = new List<ConsumprecordResponse>();
+
+            List<CategoryResponse>? result = await ApiService.GetCategoryTypesAsync();
+
+            // 5. 将请求到的数据填充到绑定的集合中
+            foreach (var consump in result.Where(t => t.categoryType.Equals("支出")))
+            {
+                CategoryTypes.Add(consump);
+            }
+            // 3. 核心步骤：判断接口是否返回了数据
+            if (CategoryTypes.Count > 0)
+            {
+                // 获取第一项的 ID
+                int firstId = CategoryTypes[0].categoryId;
+
+                // 4. 使用 Dispatcher 异步把赋值操作推进 UI 队列的末尾，
+                // 确保 ComboBox 的 Items 已经完全加载渲染完毕后，再进行“选中”操作。
+                await Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    ConsumprecordData.categoryId = firstId;
+                }));
+            }
+
             HttpRequest();
             BindingYearMonth();
         }
@@ -51,6 +87,12 @@ namespace Account.Views
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
             var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
+
+            if (ConsumprecordData.categoryId != 2)
+            {
+                matchList = matchList?.Where(o => o.categoryId == ConsumprecordData.categoryId);
+            }
+
             consumpDataGrid.ItemsSource = matchList;
             var sumAmount = matchList?.Sum(t => t.consumpAmount);
             tblockSummary.Text = sumAmount.ToString();
@@ -104,15 +146,17 @@ namespace Account.Views
 
                     int statisticsYear = Convert.ToInt16(cboxStatisticsYear.SelectedValue);
                     int statisticsMonth = Convert.ToInt16(cboxStatisticsMonth.SelectedValue);
-                    var matchList = consumprecordList?.Where(r => r.consumpYear == statisticsYear && r.consumpMonth == statisticsMonth).GroupBy(x => new { x.consumpYear, x.consumpMonth, x.categoryName })
+                    var matchList = consumprecordList?.Where(r => r.consumpYear == statisticsYear && r.consumpMonth == statisticsMonth).GroupBy(x => new { x.consumpYear, x.consumpMonth, x.categoryName,x.categoryId })
                 .Select(g => new
                 {
                     g.Key.consumpYear,
                     g.Key.consumpMonth,
                     g.Key.categoryName,
+                    g.Key.categoryId,
                     consumpAmount = g.Sum(x => x.consumpAmount)
                 })
                 .ToList();
+
                     consumpStatisticsDataGrid.ItemsSource = matchList;
                     var sumAmount = matchList?.Sum(t => t.consumpAmount);
                     tblockSummary.Text = sumAmount.ToString();
