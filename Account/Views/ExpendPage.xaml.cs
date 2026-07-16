@@ -60,23 +60,26 @@ namespace Account.Views
 
             List<CategoryResponse>? result = await ApiService.GetCategoryTypesAsync();
 
-            // 5. 将请求到的数据填充到绑定的集合中
-            foreach (var consump in result.Where(t => t.categoryType.Equals("支出")))
+            if (result != null)
             {
-                CategoryTypes.Add(consump);
-            }
-            // 3. 核心步骤：判断接口是否返回了数据
-            if (CategoryTypes.Count > 0)
-            {
-                // 获取第一项的 ID
-                int firstId = CategoryTypes[0].categoryId;
-
-                // 4. 使用 Dispatcher 异步把赋值操作推进 UI 队列的末尾，
-                // 确保 ComboBox 的 Items 已经完全加载渲染完毕后，再进行“选中”操作。
-                await Dispatcher.BeginInvoke(new Action(() =>
+                // 5. 将请求到的数据填充到绑定的集合中
+                foreach (var consump in result.Where(t => t.categoryType == "支出"))
                 {
-                    ConsumprecordData.categoryId = firstId;
-                }));
+                    CategoryTypes?.Add(consump);
+                }
+                // 3. 核心步骤：判断接口是否返回了数据
+                if (CategoryTypes?.Count > 0)
+                {
+                    // 获取第一项的 ID
+                    int firstId = CategoryTypes[0].categoryId;
+
+                    // 4. 使用 Dispatcher 异步把赋值操作推进 UI 队列的末尾，
+                    // 确保 ComboBox 的 Items 已经完全加载渲染完毕后，再进行“选中”操作。
+                    await Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        ConsumprecordData.categoryId = firstId;
+                    }));
+                }
             }
 
             HttpRequest();
@@ -116,7 +119,6 @@ namespace Account.Views
         private async void HttpRequest()
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
-            //var startDateStr = startDate.ToString("yyyy-MM-dd");
             var startDateStr = "2014-01-01";
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
             var endDateStr = endDate.ToString("yyyy-MM-dd");

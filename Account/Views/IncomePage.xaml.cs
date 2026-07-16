@@ -73,7 +73,6 @@ namespace Account.Views
         private async void HttpRequest()
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
-            //var startDateStr = startDate.ToString("yyyy-MM-dd");
             var startDateStr = "2014-01-01";
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
             var endDateStr = endDate.ToString("yyyy-MM-dd");
