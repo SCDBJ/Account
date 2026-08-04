@@ -15,7 +15,7 @@
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="22*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <DataGrid  Grid.Column="0" Grid.Row="0"
@@ -49,7 +49,7 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 <!-- 序号/文本列 -->
                 <!--<DataGridTextColumn IsReadOnly="True" Width="50" CanUserResize="False" Binding="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}, Mode=FindAncestor}}" Header="序号"/>-->
 
-                <DataGridTemplateColumn Width="60" Visibility="Collapsed" CanUserResize="False" Header="incomeId">
+                <DataGridTemplateColumn Width="50" Visibility="Collapsed" CanUserResize="False" Header="incomeId">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding incomeId}" Width="32" Height="32" Stretch="Uniform"/>
@@ -59,26 +59,28 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
 
                 <DataGridTextColumn Width="60" Binding="{Binding datacyear}" Header="年度"/>
                 <DataGridTextColumn Width="50" Binding="{Binding datacperiod}" Header="期间"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_32}" Header="核定工资总额"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_40}" Header="基本工资"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_94}" Header="核定绩效奖金"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_95}" Header="绩效奖金"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_96}" Header="绩效奖金差异"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_97}" Header="绩效奖金差异(%)"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_63}" Header="税前扣款合计"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_79}" Header="应付工资"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_158}" Header="社保个人合计"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_5}" Header="本次扣税"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_157}" Header="社保单位合计"/>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_3}" Header="实发合计">
+                <DataGridTextColumn Width="80" Binding="{Binding dataf_32}" Header="核定工资总额"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_40}" Header="基本工资"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_94}" Header="核定绩效奖金"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_95}" Header="绩效奖金"/>
+                <DataGridTextColumn Width="75" Binding="{Binding dataf_96}" Header="绩效奖金差异"/>
+                <DataGridTextColumn Width="80" Binding="{Binding dataf_97}" Header="绩效奖金差异(%)"/>
+                <DataGridTextColumn Width="75" Binding="{Binding dataf_63}" Header="税前扣款合计"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_79}" Header="应付工资"/>
+                <DataGridTextColumn Width="80" Binding="{Binding dataf_158}" Header="社保个人合计"/>
+                <DataGridTextColumn Width="70" Binding="{Binding dataf_159}" Header="公积金个人"/>
+                <DataGridTextColumn Width="75" Binding="{Binding dataf_5}" Header="本次扣税"/>
+                <DataGridTextColumn Width="75" Binding="{Binding dataf_157}" Header="社保单位合计"/>
+                <DataGridTextColumn Width="70" Binding="{Binding dataf_162}" Header="公积金单位"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_3}" Header="实发合计">
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="90" Binding="{Binding dataf_163}" Header="扣减合计(不含公积金)"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_163}" Header="扣减合计(不含公积金)"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Grid.Row="1" Grid.Column="0" FontSize="13" FontWeight="Bold" HorizontalAlignment="Left" Margin="30,0,0,0" TextWrapping="Wrap" Text="合计：" VerticalAlignment="Top"/>
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_32" HorizontalAlignment="Left" Margin="160,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
-        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_3" HorizontalAlignment="Left" Margin="1160,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
-        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_163" HorizontalAlignment="Left" Margin="1245,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_3" HorizontalAlignment="Left" Margin="1185,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_163" HorizontalAlignment="Left" Margin="1265,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
 
         <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
         <DataGrid  Grid.Column="1" 
@@ -104,7 +106,7 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
             </DataGrid.ColumnHeaderStyle>
             <!-- 列定义 -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="年份" Binding="{Binding DataCYear}" Width="1*" />
+                <DataGridTextColumn Header="年份" Binding="{Binding DataCYear}" Width="1.2*" />
 
                 <DataGridTextColumn Header="类型" Binding="{Binding AmountType}" Width="1.5*" />
 

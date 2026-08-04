@@ -157,14 +157,14 @@ namespace Account.Views
                 SalaryItem? salaryItem = new SalaryItem();
                 salaryItem.datacyear = int.Parse(rootobject.salaryList?.wa_datacyear?.content ?? "0");
                 salaryItem.datacperiod = int.Parse(rootobject.salaryList?.wa_datacperiod?.content ?? "0");
-                salaryItem.dataf_32 = decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0");
+                salaryItem.dataf_32 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0"),0,MidpointRounding.AwayFromZero);
 
                 sumDecdataf_32 += salaryItem.dataf_32;
 
                 salaryItem.dataf_131 = double.Parse(rootobject.salaryList?.wa_dataf_131?.content ?? "0");
                 salaryItem.dataf_134 = double.Parse(rootobject.salaryList?.wa_dataf_134?.content ?? "0");
-                salaryItem.dataf_40 = decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0");
-                salaryItem.dataf_95 = decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0");
+                salaryItem.dataf_40 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
+                salaryItem.dataf_95 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0"), 2, MidpointRounding.AwayFromZero);
 
                 // 【关键修复】优化年份期间拼接逻辑，确保月份永远是两位的“01-12”，避免出现 20215 导致无法比对
                 string periodStr = salaryItem.datacperiod.ToString().PadLeft(2, '0');
@@ -184,9 +184,9 @@ namespace Account.Views
                     dataf_94 = 14500.00M * 0.15M;
                 }
 
-                salaryItem.dataf_94 = dataf_94;
+                salaryItem.dataf_94 = Math.Round((decimal)dataf_94, 0, MidpointRounding.AwayFromZero);
 
-                salaryItem.dataf_96 = salaryItem.dataf_95 - salaryItem.dataf_94;
+                salaryItem.dataf_96 = Math.Round((decimal)(salaryItem.dataf_95 - salaryItem.dataf_94), 2, MidpointRounding.AwayFromZero);
 
                 salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
 
@@ -201,7 +201,7 @@ namespace Account.Views
 
                 salaryItem.dataf_79 = decimal.Parse(rootobject.salaryList?.wa_dataf_79?.content ?? "0");
                 salaryItem.dataf_158 = decimal.Parse(rootobject.salaryList?.wa_dataf_158?.content ?? "0");
-                salaryItem.dataf_159 = decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0");
+                salaryItem.dataf_159 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
                 if (rootobject.salaryList?.wa_dataf_5 != null)
                 {
                     salaryItem.dataf_5 = decimal.Parse(rootobject.salaryList?.wa_dataf_5?.content ?? "0");
@@ -211,11 +211,11 @@ namespace Account.Views
                     salaryItem.dataf_5 = 0;
                 }
 
-                salaryItem.dataf_3 = decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0");
+                salaryItem.dataf_3 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0"), 2, MidpointRounding.AwayFromZero);
                 sumDecdataf_3 += salaryItem.dataf_3;
 
                 salaryItem.dataf_157 = decimal.Parse(rootobject.salaryList?.wa_dataf_157?.content ?? "0");
-                salaryItem.dataf_162 = decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0");
+                salaryItem.dataf_162 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
 
                 var totalDeduction = -salaryItem.dataf_96 + salaryItem.dataf_63 + salaryItem.dataf_158 + salaryItem.dataf_5;
                 salaryItem.dataf_163 = totalDeduction;
