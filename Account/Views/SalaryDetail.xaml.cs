@@ -44,12 +44,12 @@ namespace Account.Views
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             BindingYear();
-            List<SalaryItem>? salaryItems = GetSalary();
-            Dispatcher.Invoke(new Action(() => SalaryDatagrid.ItemsSource = salaryItems?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod)));
+            //List<SalaryItem>? salaryItems = GetSalary();
+            //Dispatcher.Invoke(new Action(() => SalaryDatagrid.ItemsSource = salaryItems?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod)));
 
-            Dispatcher.Invoke(new Action(() => sumdataf_32.Text = sumDecdataf_32.ToString()));//核定工资总额合计
-            Dispatcher.Invoke(new Action(() => sumdataf_3.Text = sumDecdataf_3.ToString()));//实发合计
-            Dispatcher.Invoke(new Action(() => sumdataf_163.Text = sumDecdataf_163.ToString()));//扣减合计
+            //Dispatcher.Invoke(new Action(() => sumdataf_32.Text = sumDecdataf_32.ToString()));//核定工资总额合计
+            //Dispatcher.Invoke(new Action(() => sumdataf_3.Text = sumDecdataf_3.ToString()));//实发合计
+            //Dispatcher.Invoke(new Action(() => sumdataf_163.Text = sumDecdataf_163.ToString()));//扣减合计
 
             if (cboxStatisticsYear.SelectedItem == null)
                 return;
@@ -72,7 +72,10 @@ namespace Account.Views
             if (responseJson != null)
             {
                 List<SalaryItem>? salaryItem = JsonSerializer.Deserialize<List<SalaryItem>>(responseJson);
-                _cachedSalaryItems=salaryItem;
+
+                SalaryDatagrid.ItemsSource = salaryItem?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod);
+
+                _cachedSalaryItems =salaryItem;
                 if (salaryItem != null)
                 {
                     var viewModel = new MainViewModel();
