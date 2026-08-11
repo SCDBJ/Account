@@ -24,7 +24,7 @@ namespace Account
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow: System.Windows.Window
+    public partial class MainWindow : System.Windows.Window
     {
         private static readonly HttpClient _httpClient = new HttpClient();
         private string consumpAutoAccount = "/api/consumprecord-autoaccount";
@@ -81,124 +81,23 @@ namespace Account
             {
 
             }
-            List<SalaryItem>? salaryList=GetSalary();
-            if (salaryList != null)
+            HttpResponseMessage responses = await _httpClient.PostAsync(App.host + salaryrecordAdd, null);
+            if (!responses.IsSuccessStatusCode)
             {
-                foreach (var item in salaryList)
-                {
-                    HttpResponseMessage response = await _httpClient.PostAsJsonAsync(App.host + salaryrecordAdd, item);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        // 专门读取服务器返回的错误文本
-                        string errorDetails = await response.Content.ReadAsStringAsync();
-                        var statusCode = response.StatusCode;
-                        // 可以在这里根据 errorDetails 进一步调试
-                        Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
+                // 专门读取服务器返回的错误文本
+                string errorDetails = await responses.Content.ReadAsStringAsync();
+                var statusCode = responses.StatusCode;
+                // 可以在这里根据 errorDetails 进一步调试
+                Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
 
-                        return;
-                    }
-
-                    string responseJson = await response.Content.ReadAsStringAsync();
-                    if (responseJson != null && responseJson.Contains("保存成功"))
-                    {
-
-                    }
-                }
-            }
-        }
-        /// <summary>
-         /// 获取薪资明细
-         /// </summary>
-         /// <returns></returns>
-        private List<SalaryItem>? GetSalary()
-        {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "SalaryUrls";
-            IList<string>? list = FileIOHelper.FindDirectory(path);
-            if (list == null)
-            {
-                return null;
+                return;
             }
 
-            List<SalaryItem> salaryItems = new List<SalaryItem>();
-            int lastdate = int.Parse(DateTime.Now.AddMonths(-1).Year.ToString() + DateTime.Now.AddMonths(-1).Month.ToString().PadLeft(2, '0'));
-            foreach (string file in list)
+            string responseJson = await responses.Content.ReadAsStringAsync();
+            if (responseJson != null && responseJson.Contains("保存成功"))
             {
-                Rootobject? rootobject = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(file);
 
-                if (rootobject == null)
-                {
-                    continue;
-                }
-                if (rootobject.salaryList == null)
-                {
-                    continue;
-                }
-                SalaryItem? salaryItem = new SalaryItem();
-                salaryItem.datacyear = int.Parse(rootobject.salaryList?.wa_datacyear?.content ?? "0");
-                salaryItem.datacperiod = int.Parse(rootobject.salaryList?.wa_datacperiod?.content ?? "0");
-                var fdate = int.Parse(salaryItem.datacyear.ToString() + salaryItem.datacperiod.ToString().PadLeft(2, '0'));
-                if (lastdate!= fdate)
-                    continue;
-
-                salaryItem.dataf_32 = decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0");
-
-                salaryItem.dataf_131 = double.Parse(rootobject.salaryList?.wa_dataf_131?.content ?? "0");
-                salaryItem.dataf_134 = double.Parse(rootobject.salaryList?.wa_dataf_134?.content ?? "0");
-                salaryItem.dataf_40 = decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0");
-                salaryItem.dataf_95 = decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0");
-
-                decimal? dataf_94 = 0.00M;
-             
-                if (fdate <= 202110)
-                {
-                    dataf_94 = 13000M * 0.15M;
-                }
-                else if (fdate >= 202111 && fdate <= 202303)
-                {
-                    dataf_94 = 14000.00M * 0.15M;
-                }
-                else if (fdate >= 202304)
-                {
-                    dataf_94 = 14500.00M * 0.15M;
-                }
-
-                salaryItem.dataf_94 = dataf_94;
-
-                salaryItem.dataf_96 = salaryItem.dataf_95 - salaryItem.dataf_94;
-
-                salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
-
-                if (rootobject.salaryList?.wa_dataf_63 != null)
-                {
-                    salaryItem.dataf_63 = decimal.Parse(rootobject.salaryList?.wa_dataf_63?.content ?? "0");
-                }
-                else
-                {
-                    salaryItem.dataf_63 = 0;
-                }
-
-                salaryItem.dataf_79 = decimal.Parse(rootobject.salaryList?.wa_dataf_79?.content ?? "0");
-                salaryItem.dataf_158 = decimal.Parse(rootobject.salaryList?.wa_dataf_158?.content ?? "0");
-                salaryItem.dataf_159 = decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0");
-                if (rootobject.salaryList?.wa_dataf_5 != null)
-                {
-                    salaryItem.dataf_5 = decimal.Parse(rootobject.salaryList?.wa_dataf_5?.content ?? "0");
-                }
-                else
-                {
-                    salaryItem.dataf_5 = 0;
-                }
-
-                salaryItem.dataf_3 = decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0");
-
-                salaryItem.dataf_157 = decimal.Parse(rootobject.salaryList?.wa_dataf_157?.content ?? "0");
-                salaryItem.dataf_162 = decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0");
-
-                var totalDeduction = -salaryItem.dataf_96 + salaryItem.dataf_63 + salaryItem.dataf_158 + salaryItem.dataf_5;
-                salaryItem.dataf_163 = totalDeduction;
-                salaryItems.Add(salaryItem);
             }
-            return salaryItems;
         }
     }
 }
