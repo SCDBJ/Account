@@ -88,7 +88,7 @@ namespace Account
                 string errorDetails = await responses.Content.ReadAsStringAsync();
                 var statusCode = responses.StatusCode;
                 // 可以在这里根据 errorDetails 进一步调试
-                Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
+                //Growl.Error("数据获取失败！StatusCode：" + statusCode + "，ErrorDetails：" + errorDetails);
 
                 return;
             }
