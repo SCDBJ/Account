@@ -29,9 +29,6 @@ namespace Account.Views
     public partial class SalaryDetail : Page
     {
         private static readonly HttpClient _httpClient = new HttpClient();
-        private decimal? sumDecdataf_32 = 0.00M;//核定工资总额合计
-        private decimal? sumDecdataf_3 = 0.00M;//实发合计
-        private decimal? sumDecdataf_163 = 0.00M;//扣减合计
         private string salaryrecordItems = "/api/salaryrecord-items";
         // 1. 将服务器返回的原始数据缓存到类级别，方便切换年份时直接使用，不用重新请求网络
         private List<SalaryItem>? _cachedSalaryItems;
@@ -44,13 +41,7 @@ namespace Account.Views
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             BindingYear();
-            //List<SalaryItem>? salaryItems = GetSalary();
-            //Dispatcher.Invoke(new Action(() => SalaryDatagrid.ItemsSource = salaryItems?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod)));
-
-            //Dispatcher.Invoke(new Action(() => sumdataf_32.Text = sumDecdataf_32.ToString()));//核定工资总额合计
-            //Dispatcher.Invoke(new Action(() => sumdataf_3.Text = sumDecdataf_3.ToString()));//实发合计
-            //Dispatcher.Invoke(new Action(() => sumdataf_163.Text = sumDecdataf_163.ToString()));//扣减合计
-
+           
             if (cboxStatisticsYear.SelectedItem == null)
                 return;
             int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
@@ -75,7 +66,10 @@ namespace Account.Views
 
                 SalaryDatagrid.ItemsSource = salaryItem?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod);
 
-                _cachedSalaryItems =salaryItem;
+                Dispatcher.Invoke(new Action(() => sumdataf_32.Text = salaryItem?.Sum(t=>t.dataf_32).ToString()));//核定工资总额合计
+                Dispatcher.Invoke(new Action(() => sumdataf_3.Text = salaryItem?.Sum(t => t.dataf_3).ToString()));//实发合计
+                Dispatcher.Invoke(new Action(() => sumdataf_163.Text = salaryItem?.Sum(t => t.dataf_163).ToString()));//扣减合计
+                _cachedSalaryItems = salaryItem;
                 if (salaryItem != null)
                 {
                     var viewModel = new MainViewModel();
@@ -127,105 +121,6 @@ namespace Account.Views
                     }
                 }
             }
-        }
-        /// <summary>
-        /// 获取薪资明细
-        /// </summary>
-        /// <returns></returns>
-        private List<SalaryItem>? GetSalary()
-        {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "SalaryUrls";
-            IList<string>? list = FileIOHelper.FindDirectory(path);
-            if (list == null)
-            {
-                return null;
-            }
-            sumDecdataf_32 = 0;
-            sumDecdataf_3 = 0;
-            sumDecdataf_163 = 0;
-            List<SalaryItem> salaryItems = new List<SalaryItem>();
-
-            foreach (string file in list)
-            {
-                Rootobject? rootobject = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(file);
-
-                if (rootobject == null)
-                {
-                    continue;
-                }
-                if (rootobject.salaryList == null)
-                {
-                    continue;
-                }
-                SalaryItem? salaryItem = new SalaryItem();
-                salaryItem.datacyear = int.Parse(rootobject.salaryList?.wa_datacyear?.content ?? "0");
-                salaryItem.datacperiod = int.Parse(rootobject.salaryList?.wa_datacperiod?.content ?? "0");
-                salaryItem.dataf_32 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_32?.content ?? "0"),0,MidpointRounding.AwayFromZero);
-
-                sumDecdataf_32 += salaryItem.dataf_32;
-
-                salaryItem.dataf_131 = double.Parse(rootobject.salaryList?.wa_dataf_131?.content ?? "0");
-                salaryItem.dataf_134 = double.Parse(rootobject.salaryList?.wa_dataf_134?.content ?? "0");
-                salaryItem.dataf_40 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_40?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
-                salaryItem.dataf_95 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_95?.content ?? "0"), 2, MidpointRounding.AwayFromZero);
-
-                // 【关键修复】优化年份期间拼接逻辑，确保月份永远是两位的“01-12”，避免出现 20215 导致无法比对
-                string periodStr = salaryItem.datacperiod.ToString().PadLeft(2, '0');
-                int fdate = int.Parse($"{salaryItem.datacyear}{periodStr}");
-
-                decimal? dataf_94 = 0.00M;
-                if (fdate <= 202110)
-                {
-                    dataf_94 = 13000M * 0.15M;
-                }
-                else if (fdate >= 202111 && fdate <= 202303)
-                {
-                    dataf_94 = 14000.00M * 0.15M;
-                }
-                else if (fdate >= 202304)
-                {
-                    dataf_94 = 14500.00M * 0.15M;
-                }
-
-                salaryItem.dataf_94 = Math.Round((decimal)dataf_94, 0, MidpointRounding.AwayFromZero);
-
-                salaryItem.dataf_96 = Math.Round((decimal)(salaryItem.dataf_95 - salaryItem.dataf_94), 2, MidpointRounding.AwayFromZero);
-
-                salaryItem.dataf_97 = (salaryItem.dataf_96 / salaryItem.dataf_94 * 100)?.ToString("F2") + "%";
-
-                if (rootobject.salaryList?.wa_dataf_63 != null)
-                {
-                    salaryItem.dataf_63 = decimal.Parse(rootobject.salaryList?.wa_dataf_63?.content ?? "0");
-                }
-                else
-                {
-                    salaryItem.dataf_63 = 0;
-                }
-
-                salaryItem.dataf_79 = decimal.Parse(rootobject.salaryList?.wa_dataf_79?.content ?? "0");
-                salaryItem.dataf_158 = decimal.Parse(rootobject.salaryList?.wa_dataf_158?.content ?? "0");
-                salaryItem.dataf_159 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_159?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
-                if (rootobject.salaryList?.wa_dataf_5 != null)
-                {
-                    salaryItem.dataf_5 = decimal.Parse(rootobject.salaryList?.wa_dataf_5?.content ?? "0");
-                }
-                else
-                {
-                    salaryItem.dataf_5 = 0;
-                }
-
-                salaryItem.dataf_3 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_3?.content ?? "0"), 2, MidpointRounding.AwayFromZero);
-                sumDecdataf_3 += salaryItem.dataf_3;
-
-                salaryItem.dataf_157 = decimal.Parse(rootobject.salaryList?.wa_dataf_157?.content ?? "0");
-                salaryItem.dataf_162 = Math.Round(decimal.Parse(rootobject.salaryList?.wa_dataf_162?.content ?? "0"), 0, MidpointRounding.AwayFromZero);
-
-                var totalDeduction = -salaryItem.dataf_96 + salaryItem.dataf_63 + salaryItem.dataf_158 + salaryItem.dataf_5;
-                salaryItem.dataf_163 = totalDeduction;
-                sumDecdataf_163 += salaryItem.dataf_163;
-                salaryItems.Add(salaryItem);
-            }
-            return salaryItems;
         }
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
