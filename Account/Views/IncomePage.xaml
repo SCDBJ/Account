@@ -26,7 +26,7 @@
         <Label  Grid.Column="0" Content="结束日期" HorizontalAlignment="Left"  hc:InfoElement.Placeholder="请选择日期" Margin="265,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
         <hc:DatePicker  Grid.Column="0" Name="endDatePicker"  SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left" Margin="365,37,0,0" VerticalAlignment="Top" FontSize="16" Background="#33a5b0" Foreground="White" FontWeight="Bold" Width="125" Height="30"/>
         <Button  Grid.Column="0" Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="517,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button  Grid.Column="0" Content="新增" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="618,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button  Grid.Column="0" Content="新增(_S)" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="618,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <DataGrid  Grid.Column="0" 
       Name="incomeDataGrid" 
