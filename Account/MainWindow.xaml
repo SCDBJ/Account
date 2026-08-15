@@ -39,7 +39,7 @@
 
             <!-- 菜单项列表 -->
             <!-- ImageGeometry 可以直接绑定内置的几何图形，比如从 HandyControl 资源中找，或者自己写 PathData -->
-            <hc:SideMenuItem Name="ItemExpendDetail" Header="支出详情" CommandParameter="Expend" IsSelected="True" >
+            <hc:SideMenuItem Name="ItemExpendDetail" Header="支出详情" CommandParameter="Expend" IsSelected="False" >
                 <hc:SideMenuItem.Icon>
                     <!-- 嵌入传统的图片控件，建议固定宽高以防变形 -->
                     <Image Source="/Images/支出详情.png" 

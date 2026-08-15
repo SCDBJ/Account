@@ -29,6 +29,8 @@ namespace Account
         private static readonly HttpClient _httpClient = new HttpClient();
         private string consumpAutoAccount = "/api/consumprecord-autoaccount";
         private string salaryrecordAdd = "/api/salaryrecord-add";
+        // 1. 声明成员变量，并直接将默认值指向你 XAML 中初始选中的项 (ItemExpendDetail)
+        private SideMenuItem? _currentSelectedItem;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,9 +42,12 @@ namespace Account
             // 1. 健壮性检查：确保窗口初始化未完成时（MainFrame还不存在时）不崩溃
             if (MainFrame == null || MainMenu == null)
                 return;
+
             if (e.Info is SideMenuItem selectedItem)
             {
-                // 3. 方式 B：通过 Tag（标签）判断（比用 Header 字符串判断更稳妥，不易受多语言/改名影响）
+                // 如果是鼠标点击触发的，也同步更新 _currentSelectedItem 的记录
+                _currentSelectedItem = selectedItem;
+
                 string? menuTag = selectedItem.CommandParameter?.ToString();
 
                 switch (menuTag)
@@ -104,7 +109,7 @@ namespace Account
         {
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                SideMenuItem targetItem = null;
+                SideMenuItem? targetItem = null;
 
                 switch (e.Key)
                 {
@@ -112,33 +117,39 @@ namespace Account
                     case Key.NumPad1:
                         targetItem = ItemExpendDetail;
                         break;
-
                     case Key.D2:
                     case Key.NumPad2:
                         targetItem = ItemIncomeDetail;
                         break;
-
                     case Key.D3:
                     case Key.NumPad3:
                         targetItem = ItemIncomeCategory;
                         break;
-
                     case Key.D4:
                     case Key.NumPad4:
                         targetItem = ItemSalaryDetail;
                         break;
                 }
 
-                if (targetItem != null)
+                // 如果按下的快捷键对应的项与当前选中项不同
+                if (targetItem != null && targetItem != _currentSelectedItem)
                 {
-                    // 1. 设置侧边栏高亮
+                    // A. 取消上一个项的选中（恢复正常字体，解决“多项同时粗体”的问题）
+                    if (_currentSelectedItem != null)
+                    {
+                        _currentSelectedItem.IsSelected = false;
+                    }
+
+                    // B. 选中当前新项（变粗体）
                     targetItem.IsSelected = true;
 
-                    // 2. 手动调用切换逻辑，确保 Frame 跟着跳转
-                    var args = new HandyControl.Data.FunctionEventArgs<object>(targetItem);
+                    // C. 更新记录
+                    _currentSelectedItem = targetItem;
+
+                    // D. 手动触发你的 SelectionChanged 跳转逻辑
+                    var args = new FunctionEventArgs<object>(targetItem);
                     SideMenu_SelectionChanged(MainMenu, args);
 
-                    // 3. 标记事件已被处理
                     e.Handled = true;
                 }
             }
