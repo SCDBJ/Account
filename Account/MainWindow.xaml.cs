@@ -99,5 +99,49 @@ namespace Account
 
             }
         }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                SideMenuItem targetItem = null;
+
+                switch (e.Key)
+                {
+                    case Key.D1:
+                    case Key.NumPad1:
+                        targetItem = ItemExpendDetail;
+                        break;
+
+                    case Key.D2:
+                    case Key.NumPad2:
+                        targetItem = ItemIncomeDetail;
+                        break;
+
+                    case Key.D3:
+                    case Key.NumPad3:
+                        targetItem = ItemIncomeCategory;
+                        break;
+
+                    case Key.D4:
+                    case Key.NumPad4:
+                        targetItem = ItemSalaryDetail;
+                        break;
+                }
+
+                if (targetItem != null)
+                {
+                    // 1. 设置侧边栏高亮
+                    targetItem.IsSelected = true;
+
+                    // 2. 手动调用切换逻辑，确保 Frame 跟着跳转
+                    var args = new HandyControl.Data.FunctionEventArgs<object>(targetItem);
+                    SideMenu_SelectionChanged(MainMenu, args);
+
+                    // 3. 标记事件已被处理
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }
