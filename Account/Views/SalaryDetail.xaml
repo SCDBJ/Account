@@ -64,7 +64,7 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 <DataGridTextColumn Width="85" Binding="{Binding dataf_94}" Header="核定绩效奖金"/>
                 <DataGridTextColumn Width="85" Binding="{Binding dataf_95}" Header="绩效奖金"/>
                 <DataGridTextColumn Width="75" Binding="{Binding dataf_96}" Header="绩效奖金差异"/>
-                <DataGridTextColumn Width="80" Binding="{Binding dataf_97}" Header="绩效奖金差异(%)"/>
+                <DataGridTextColumn Width="85" Binding="{Binding dataf_97}" Header="绩效奖金差异(%)"/>
                 <DataGridTextColumn Width="75" Binding="{Binding dataf_63}" Header="税前扣款合计"/>
                 <DataGridTextColumn Width="85" Binding="{Binding dataf_79}" Header="应付工资"/>
                 <DataGridTextColumn Width="80" Binding="{Binding dataf_158}" Header="社保个人合计"/>
