@@ -17,7 +17,7 @@
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="9*"/>
             <ColumnDefinition Width="4.5*"/>
             <ColumnDefinition Width="3.5*"/>
         </Grid.ColumnDefinitions>
@@ -38,8 +38,9 @@ SelectedValuePath="categoryId"
                   VerticalContentAlignment="Center"
                   VerticalAlignment="Top">
         </ComboBox>
-        <Button  Grid.Column="0" Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="620,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button  Grid.Column="0" Content="新增(_S)" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="720,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox  Grid.Column="0" Name="tboxNote" Width="100" FontSize="16"  Height="30" Margin="615,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button  Grid.Column="0" Content="查询" Name="btnQuery" Click="btnQuery_Click" Style="{StaticResource ButtonPrimary}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="730,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button  Grid.Column="0" Content="新增(_S)" x:Name="btnAdd" Click="btnAdd_Click" Style="{StaticResource ButtonSuccess}"   Width="80" FontSize="16"  FontWeight="Bold" Height="30" Margin="830,37,0,0"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <DataGrid  Grid.Column="0" 
           Name="consumpDataGrid" 
@@ -52,7 +53,7 @@ SelectedValuePath="categoryId"
           LoadingRow="DataGrid_LoadingRow" 
           GridLinesVisibility="All" 
           VerticalScrollBarVisibility="Auto"
-          MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
+          MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}" Width="923">
 
             <!-- 表头左侧：全选/单选框复选槽 -->
             <!--<DataGrid.RowHeaderTemplate>

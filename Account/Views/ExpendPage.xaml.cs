@@ -89,14 +89,20 @@ namespace Account.Views
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
-            var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
+            var remark = tboxNote.Text;
+            var category = cbxCategory.Text;
 
+            var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
+            if (category !="请选择") 
+            {
+                matchList= matchList?.Where(x=>x.consumpNote == remark).ToList();
+            }
             if (ConsumprecordData.categoryId != 2)
             {
                 matchList = matchList?.Where(o => o.categoryId == ConsumprecordData.categoryId);
             }
 
-            consumpDataGrid.ItemsSource = matchList;
+            consumpDataGrid.ItemsSource = matchList.OrderByDescending(o=>o.consumpTime);
             var sumAmount = matchList?.Sum(t => t.consumpAmount);
             tblockSummary.Text = sumAmount.ToString();
         }
