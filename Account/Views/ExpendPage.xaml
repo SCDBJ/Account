@@ -132,7 +132,7 @@ SelectedValuePath="categoryId"
             LoadingRow="DataGrid_LoadingRow" 
             GridLinesVisibility="All" 
             VerticalScrollBarVisibility="Auto"
-            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}" Width="382">
 
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="{x:Type DataGridColumnHeader}">

@@ -132,7 +132,7 @@
 
                                         <Border.Style>
                                             <Style TargetType="Border">
-                                                <Setter Property="Background" Value="#2196F3"/>
+                                                <Setter Property="Background" Value="#e61616"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IncomeAmount, Converter={StaticResource IsPositiveConverter}}" Value="False">
                                                         <Setter Property="Background" Value="#4CAF50"/>
@@ -159,7 +159,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0">
-                <TextBlock FontSize="13" FontWeight="Bold" Text="天合计："/>
+                <TextBlock FontSize="13" FontWeight="Bold" Text="月合计："/>
                 <TextBlock x:Name="tblockSummary" FontWeight="Bold" FontSize="13" Foreground="DarkOrange"/>
             </StackPanel>
 
