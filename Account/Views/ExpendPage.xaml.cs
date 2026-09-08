@@ -95,7 +95,7 @@ namespace Account.Views
             var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
             if (category !="请选择") 
             {
-                matchList= matchList?.Where(x=>x.consumpNote == remark).ToList();
+                matchList= matchList?.Where(x=>x.consumpNote.Contains(remark)).ToList();
             }
             if (ConsumprecordData.categoryId != 2)
             {
