@@ -1,4 +1,5 @@
-﻿using Account.Models.Income.Request;
+﻿using Account.Models.Consump.Response;
+using Account.Models.Income.Request;
 using Account.Models.Income.Response;
 
 using HandyControl.Controls;
@@ -49,8 +50,19 @@ namespace Account.Views
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
-            var matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime <= endDate);
-            incomeDataGrid.ItemsSource = matchList;
+            var remark = tboxNote.Text;
+
+            IEnumerable<IncomerecordResponse>? matchList;
+            if (remark == " ")
+            {
+                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime <= endDate && x.incomeNote== remark.Trim());
+            }
+            else
+            {
+                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime <= endDate && x.incomeNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
+            }
+            
+            incomeDataGrid.ItemsSource = matchList?.OrderByDescending(o=>o.incomeTime);
             var sumAmount = matchList?.Sum(t => t.incomeAmount);
             tblockSummary.Text = sumAmount.ToString();
         }

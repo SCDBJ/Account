@@ -91,18 +91,22 @@ namespace Account.Views
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
             var remark = tboxNote.Text;
             var category = cbxCategory.Text;
-
-            var matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate);
-            if (category !="请选择") 
+            IEnumerable<ConsumprecordResponse>? matchList;
+             if (remark == " ")
             {
-                matchList= matchList?.Where(x=>x.consumpNote.Contains(remark)).ToList();
+                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate && x.consumpNote== remark.Trim());
             }
+            else
+            {
+                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate && x.consumpNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
+            }
+            
             if (ConsumprecordData.categoryId != 2)
             {
                 matchList = matchList?.Where(o => o.categoryId == ConsumprecordData.categoryId);
             }
 
-            consumpDataGrid.ItemsSource = matchList.OrderByDescending(o=>o.consumpTime);
+            consumpDataGrid.ItemsSource = matchList?.OrderByDescending(o=>o.consumpTime);
             var sumAmount = matchList?.Sum(t => t.consumpAmount);
             tblockSummary.Text = sumAmount.ToString();
         }
