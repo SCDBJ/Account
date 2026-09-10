@@ -79,7 +79,7 @@ namespace Account.Views
             {
                 cboxStatisticsMonth.Items.Add(j.ToString());
             }
-            var currentMonth = DateTime.Now.AddMonths(-1).Month;
+            var currentMonth = DateTime.Now.AddMonths(-1).Month.ToString();
             cboxStatisticsMonth.SelectedValue = currentMonth;
         }
         private async void HttpRequest()
