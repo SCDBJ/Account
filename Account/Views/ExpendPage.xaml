@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="4.5*"/>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="3.5*"/>
         </Grid.ColumnDefinitions>
         <Label  Grid.Column="0" Content="开始日期" HorizontalAlignment="Left" Margin="26,37,0,0" VerticalAlignment="Top" FontSize="16" Height="30"/>
@@ -132,7 +132,7 @@ SelectedValuePath="categoryId"
             LoadingRow="DataGrid_LoadingRow" 
             GridLinesVisibility="All" 
             VerticalScrollBarVisibility="Auto"
-            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}" Width="382">
+            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}" Width="427">
 
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
