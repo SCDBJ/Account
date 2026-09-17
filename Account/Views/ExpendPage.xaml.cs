@@ -89,6 +89,7 @@ namespace Account.Views
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
             DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
+            endDate= endDate.AddDays(1);
             var remark = tboxNote.Text;
             var category = cbxCategory.Text;
             IEnumerable<ConsumprecordResponse>? matchList;
