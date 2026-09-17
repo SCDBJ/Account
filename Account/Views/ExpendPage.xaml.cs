@@ -88,8 +88,7 @@ namespace Account.Views
         private void btnQuery_Click(object sender, RoutedEventArgs e)
         {
             DateTime startDate = startDatePicker.SelectedDate ?? DateTime.Today;
-            DateTime endDate = endDatePicker.SelectedDate ?? DateTime.Today;
-            endDate= endDate.AddDays(1);
+            DateTime endDate = (endDatePicker.SelectedDate?.Date ?? DateTime.Today).AddDays(1);
             var remark = tboxNote.Text;
             var category = cbxCategory.Text;
             IEnumerable<ConsumprecordResponse>? matchList;
