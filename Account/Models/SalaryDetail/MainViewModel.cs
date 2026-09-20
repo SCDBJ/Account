@@ -11,32 +11,27 @@ namespace Account.Models.SalaryDetail
     {
         // DataGrid 最终绑定的数据源
         public ObservableCollection<DisplayItem> GridData { get; set; } = new ObservableCollection<DisplayItem>();
-        // 合计金额属性
-        private decimal _totalAmount;
-        public decimal TotalAmount
-        {
-            get => _totalAmount;
-            set
-            {
-                _totalAmount = value;
-                OnPropertyChanged(); // 通知 UI 刷新
-            }
-        }
-        // 模拟加载和转换数据的方法
+        public ObservableCollection<DisplayItem> GridBaseData { get; set; } = new ObservableCollection<DisplayItem>();
         public void LoadData(List<RawDataObject> rawList)
         {
             GridData.Clear();
 
             foreach (var raw in rawList)
             {
-                // 每一个原始对象，都拆分成 7 条展示数据
-                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发绩效", Amount = raw.dataf_95 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "绩效扣款", Amount = raw.dataf_96 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "税前扣款", Amount = raw.dataf_63 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "社保", Amount = raw.dataf_158 });
-                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金", Amount = raw.dataf_159 });
                 GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "个税", Amount = raw.dataf_5 });
-                //GridData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发工资", Amount = raw.dataf_3 });
+            }
+        }
+        public void LoadBaseData(List<RawBaseDataObject> rawList)
+        {
+            GridBaseData.Clear();
+
+            foreach (var raw in rawList)
+            {
+                GridBaseData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "核定工资", Amount = raw.dataf_32 });
+                GridBaseData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金单位", Amount = raw.dataf_162 });
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -46,17 +41,12 @@ namespace Account.Models.SalaryDetail
         }
     }
 
-    // 你的原始数据结构
     public class RawDataObject
     {
         public string? datacyear
         {
             get; set;
         }
-        //public decimal? dataf_95
-        //{
-        //    get; set;
-        //}
         public decimal? dataf_96
         {
             get; set;
@@ -69,17 +59,24 @@ namespace Account.Models.SalaryDetail
         {
             get; set;
         }
-        //public decimal? dataf_159
-        //{
-        //    get; set;
-        //}
         public decimal? dataf_5
         {
             get; set;
         }
-        //public decimal? dataf_3
-        //{
-        //    get; set;
-        //}
+    }
+    public class RawBaseDataObject
+    {
+        public string? datacyear
+        {
+            get; set;
+        }
+        public decimal? dataf_32
+        {
+            get; set;
+        }
+        public decimal? dataf_162
+        {
+            get; set;
+        }
     }
 }

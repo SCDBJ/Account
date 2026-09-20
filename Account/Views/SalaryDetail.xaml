@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="22*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="5.5*"/>
         </Grid.ColumnDefinitions>
         <DataGrid  Grid.Column="0" Grid.Row="0"
 Name="SalaryDatagrid" 
@@ -83,9 +83,6 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_163" HorizontalAlignment="Left" Margin="1265,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_159" HorizontalAlignment="Left" Margin="890,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_162" HorizontalAlignment="Left" Margin="1040,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
-
-
-        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
         <DataGrid  Grid.Column="1" 
     x:Name="salaryStatisticsDataGrid" 
     ItemsSource="{Binding GridData}"
@@ -122,7 +119,45 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtTotalAmount"  HorizontalAlignment="Left" Margin="221,320,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtTotalAmount"  HorizontalAlignment="Left" Margin="239,320,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <hc:ComboBox x:Name="cboxYear" HorizontalAlignment="Left" Margin="30,32,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxYear_SelectionChanged"  Height="30"/>
+        <DataGrid  Grid.Column="1" 
+x:Name="salaryBaseDataGrid" 
+ItemsSource="{Binding GridBaseData}"
+HorizontalAlignment="Left"
+HeadersVisibility="All" 
+RowHeaderWidth="60" 
+AutoGenerateColumns="False" 
+IsReadOnly="True"
+Margin="20,365,0,367"
+LoadingRow="DataGrid_LoadingRow" 
+GridLinesVisibility="All" 
+VerticalScrollBarVisibility="Auto"
+MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="年份" Binding="{Binding DataCYear}" Width="1.2*" />
+
+                <DataGridTextColumn Header="类型" Binding="{Binding AmountType}" Width="1.8*" />
+
+                <DataGridTextColumn Header="金额" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="1.7*" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtBaseTotalAmount"  HorizontalAlignment="Left" Margin="239,514,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+
     </Grid>
 </Page>

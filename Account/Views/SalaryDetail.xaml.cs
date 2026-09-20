@@ -42,9 +42,9 @@ namespace Account.Views
         {
             BindingYear();
            
-            if (cboxStatisticsYear.SelectedItem == null)
+            if (cboxYear.SelectedItem == null)
                 return;
-            int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
+            int statisticsYear = int.Parse(cboxYear.SelectedItem.ToString()!);
             int selectYear = int.Parse(cboxYear.SelectedItem.ToString()!);
 
             var postJson = new SalaryrecordRequest { startYear = 2021, endYear = DateTime.Now.Year };
@@ -91,37 +91,61 @@ namespace Account.Views
                             rawDataObject = new RawDataObject
                             {
                                 datacyear = item.datacyear.ToString(),
-                                //dataf_95 = item.dataf_95,
                                 dataf_96 = -item.dataf_96,
                                 dataf_63 = item.dataf_63,
                                 dataf_158 = item.dataf_158,
-                                //dataf_159 = item.dataf_159,
                                 dataf_5 = item.dataf_5,
-                                //dataf_3 = item.dataf_3
                             };
                             rawData.Add(rawDataObject);
-                            total += /*item.dataf_95 +*/ -item.dataf_96 + item.dataf_63 + item.dataf_158 /*+ item.dataf_159 */+ item.dataf_5 /*+ item.dataf_3*/;
+                            total += -item.dataf_96 + item.dataf_63 + item.dataf_158 + item.dataf_5;
                         }
                         var rawDatas= rawData.GroupBy(t=>new { t.datacyear}).
                             Select(g=> new
                             {
                                 g.Key.datacyear,
-                                //dataf_95 = g.Sum(x => x.dataf_95),
                                 dataf_96 = g.Sum(x => -x.dataf_96),
                                 dataf_63 = g.Sum(x => x.dataf_63),
                                 dataf_158 = g.Sum(x => x.dataf_158),
-                                //dataf_159 = g.Sum(x => x.dataf_159*2),
                                 dataf_5 = g.Sum(x => x.dataf_5),
-                                //dataf_3 = g.Sum(x => x.dataf_3),
                             }).ToList();
                         List<RawDataObject> rawList = new List<RawDataObject>();
                         foreach (var raw in rawDatas)
                         {
-                            rawList.Add(new RawDataObject { datacyear=raw.datacyear, /*dataf_95 = raw.dataf_95,*/ dataf_96=-raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158, /*dataf_159=raw.dataf_159, */dataf_5=raw.dataf_5/*, dataf_3=raw.dataf_3 */});
+                            rawList.Add(new RawDataObject { datacyear=raw.datacyear,dataf_96=-raw.dataf_96, dataf_63=raw.dataf_63, dataf_158=raw.dataf_158,dataf_5=raw.dataf_5});
                         }
                         viewModel.LoadData(rawList);
-
                         txtTotalAmount.Text = total.ToString();
+
+
+                        decimal? basetotal = 0.00M;
+                        var rawBaseData = new List<RawBaseDataObject>();
+                        RawBaseDataObject rawBaseDataObject = new RawBaseDataObject();
+                        foreach (var item in matchList)
+                        {
+                            rawBaseDataObject = new RawBaseDataObject
+                            {
+                                datacyear = item.datacyear.ToString(),
+                                dataf_32 = item.dataf_32,
+                                dataf_162 = item.dataf_162
+                            };
+                            rawBaseData.Add(rawBaseDataObject);
+                            basetotal += item.dataf_32 +item.dataf_162 ;
+                        }
+                        var rawBaseDatas = rawBaseData.GroupBy(t => new { t.datacyear }).
+                            Select(g => new
+                            {
+                                g.Key.datacyear,
+                                dataf_32 = g.Sum(x => x.dataf_32),
+                                dataf_162 = g.Sum(x => x.dataf_162)
+                            }).ToList();
+
+                        List<RawBaseDataObject> rawBaseList = new List<RawBaseDataObject>();
+                        foreach (var raw in rawBaseDatas)
+                        {
+                            rawBaseList.Add(new RawBaseDataObject { datacyear = raw.datacyear, dataf_32 = raw.dataf_32, dataf_162 = raw.dataf_162});
+                        }
+                        viewModel.LoadBaseData(rawBaseList);
+                        txtBaseTotalAmount.Text = basetotal.ToString();
                     }
                 }
             }
@@ -130,64 +154,13 @@ namespace Account.Views
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
-
-        private void cboxStatisticsYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_cachedSalaryItems == null || cboxStatisticsYear.SelectedItem == null)
-                return;
-
-            try
-            {
-                int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
-
-                List<SalaryItem> matchList = _cachedSalaryItems.Where(t => t.datacyear == statisticsYear).ToList();
-
-                if (matchList.Count > 0)
-                {
-                    var yearGroup = matchList.GroupBy(t => t.datacyear)
-                        .Select(g => new RawDataObject
-                        {
-                            datacyear = g.Key.ToString(),
-                            //dataf_95 = g.Sum(x => x.dataf_95),
-                            dataf_96 = g.Sum(x => -x.dataf_96), // 绩效扣款在界面上要体现为负数
-                            dataf_63 = g.Sum(x => x.dataf_63),
-                            dataf_158 = g.Sum(x => x.dataf_158),
-                            //dataf_159 = g.Sum(x => x.dataf_159*2),
-                            dataf_5 = g.Sum(x => x.dataf_5),
-                            //dataf_3 = g.Sum(x => x.dataf_3),
-                        }).ToList();
-
-                    // 2. 🔍 【修复】改用类级别的 _viewModel，而不是局部 new，确保前端能收到通知
-                    _viewModel.LoadData(yearGroup);
-
-                    // 3. 🔍 【修复】合计金额应该直接等于 DataGrid 里当前展示的所有项的 Amount 总和，避免符号陷阱
-                    decimal? total = _viewModel.GridData.Sum(item => item.Amount);
-
-                    // 格式化输出带两位小数的金额
-                    txtTotalAmount.Text = total.ToString();
-                }
-                else
-                {
-                    // 没找到数据就清空
-                    _viewModel.GridData.Clear();
-                    txtTotalAmount.Text = "0.00";
-                }
-            }
-            catch (Exception ex)
-            {
-                Growl.Error($"切换年份时发生错误: {ex.Message}");
-            }
-        }
         private void BindingYear()
         {
-            cboxStatisticsYear.Items.Clear();
             cboxYear.Items.Clear();
             for (int i = DateTime.Now.Year; i >= 2014; i--)
             {
-                cboxStatisticsYear.Items.Add(i);
                 cboxYear.Items.Add(i);
             }
-            cboxStatisticsYear.SelectedIndex = 0;
             cboxYear.SelectedIndex = 0;
         }
 
@@ -204,6 +177,60 @@ namespace Account.Views
             Dispatcher.Invoke(new Action(() => sumdataf_162.Text = salaryItemFilter?.Sum(t => t.dataf_162).ToString()));//公积金单位
             Dispatcher.Invoke(new Action(() => sumdataf_3.Text = salaryItemFilter?.Sum(t => t.dataf_3).ToString()));//实发合计
             Dispatcher.Invoke(new Action(() => sumdataf_163.Text = salaryItemFilter?.Sum(t => t.dataf_163).ToString()));//扣减合计
+
+
+            if (_cachedSalaryItems == null)
+                return;
+
+            try
+            {
+                int statisticsYear = int.Parse(cboxYear.SelectedItem.ToString()!);
+
+                List<SalaryItem> matchList = _cachedSalaryItems.Where(t => t.datacyear == statisticsYear).ToList();
+
+                if (matchList.Count > 0)
+                {
+                    var yearGroup = matchList.GroupBy(t => t.datacyear)
+                        .Select(g => new RawDataObject
+                        {
+                            datacyear = g.Key.ToString(),
+                            dataf_96 = g.Sum(x => -x.dataf_96), // 绩效扣款在界面上要体现为负数
+                            dataf_63 = g.Sum(x => x.dataf_63),
+                            dataf_158 = g.Sum(x => x.dataf_158),
+                            dataf_5 = g.Sum(x => x.dataf_5),
+                        }).ToList();
+
+                    _viewModel.LoadData(yearGroup);
+                    decimal? total = _viewModel.GridData.Sum(item => item.Amount);
+                    txtTotalAmount.Text = total.ToString();
+
+
+                    var yearBaseGroup = matchList.GroupBy(t => t.datacyear)
+                        .Select(g => new RawBaseDataObject
+                        {
+                            datacyear = g.Key.ToString(),
+                            dataf_32 = g.Sum(x => x.dataf_32),
+                            dataf_162 = g.Sum(x => x.dataf_162)
+                        }).ToList();
+
+                    _viewModel.LoadBaseData(yearBaseGroup);
+                    decimal? basetotal = _viewModel.GridBaseData.Sum(item => item.Amount);
+                    txtBaseTotalAmount.Text = basetotal.ToString();
+                }
+                else
+                {
+                    // 没找到数据就清空
+                    _viewModel.GridData.Clear();
+                    txtTotalAmount.Text = "0.00";
+
+                    _viewModel.GridBaseData.Clear();
+                    txtBaseTotalAmount.Text = "0.00";
+                }
+            }
+            catch (Exception ex)
+            {
+                Growl.Error($"切换年份时发生错误: {ex.Message}");
+            }
         }
     }
 }
