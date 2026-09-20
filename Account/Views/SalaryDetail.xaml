@@ -81,8 +81,11 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_32" HorizontalAlignment="Left" Margin="160,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_3" HorizontalAlignment="Left" Margin="1185,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
         <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_163" HorizontalAlignment="Left" Margin="1265,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_159" HorizontalAlignment="Left" Margin="890,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="0" Grid.Row="1" x:Name="sumdataf_162" HorizontalAlignment="Left" Margin="1040,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
 
-        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
+
+        <hc:ComboBox Grid.Column="1" x:Name="cboxStatisticsYear" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxStatisticsYear_SelectionChanged"  Height="31"/>
         <DataGrid  Grid.Column="1" 
     x:Name="salaryStatisticsDataGrid" 
     ItemsSource="{Binding GridData}"
@@ -91,7 +94,7 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
     RowHeaderWidth="60" 
     AutoGenerateColumns="False" 
     IsReadOnly="True"
-    Margin="20,83,0,10"
+    Margin="20,73,0,566"
     LoadingRow="DataGrid_LoadingRow" 
     GridLinesVisibility="All" 
     VerticalScrollBarVisibility="Auto"
@@ -119,6 +122,7 @@ MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}">
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Column="1" Visibility="Visible" Grid.Row="1" x:Name="txtTotalAmount"  HorizontalAlignment="Left" Margin="230,0,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtTotalAmount"  HorizontalAlignment="Left" Margin="221,320,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <hc:ComboBox x:Name="cboxYear" HorizontalAlignment="Left" Margin="30,32,0,0" VerticalAlignment="Top" Width="75"  SelectionChanged="cboxYear_SelectionChanged"  Height="30"/>
     </Grid>
 </Page>

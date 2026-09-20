@@ -45,6 +45,7 @@ namespace Account.Views
             if (cboxStatisticsYear.SelectedItem == null)
                 return;
             int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
+            int selectYear = int.Parse(cboxYear.SelectedItem.ToString()!);
 
             var postJson = new SalaryrecordRequest { startYear = 2021, endYear = DateTime.Now.Year };
 
@@ -63,20 +64,23 @@ namespace Account.Views
             if (responseJson != null)
             {
                 List<SalaryItem>? salaryItem = JsonSerializer.Deserialize<List<SalaryItem>>(responseJson);
+                List<SalaryItem>? salaryItemFilter = salaryItem?.Where(o => o.datacyear == selectYear).OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod).ToList();
 
-                SalaryDatagrid.ItemsSource = salaryItem?.OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod);
+                SalaryDatagrid.ItemsSource = salaryItemFilter;
 
-                Dispatcher.Invoke(new Action(() => sumdataf_32.Text = salaryItem?.Sum(t=>t.dataf_32).ToString()));//核定工资总额合计
-                Dispatcher.Invoke(new Action(() => sumdataf_3.Text = salaryItem?.Sum(t => t.dataf_3).ToString()));//实发合计
-                Dispatcher.Invoke(new Action(() => sumdataf_163.Text = salaryItem?.Sum(t => t.dataf_163).ToString()));//扣减合计
+                Dispatcher.Invoke(new Action(() => sumdataf_32.Text = salaryItemFilter?.Sum(t=>t.dataf_32).ToString()));//核定工资总额合计
+                Dispatcher.Invoke(new Action(() => sumdataf_159.Text = salaryItemFilter?.Sum(t => t.dataf_159).ToString()));//公积金个人
+                Dispatcher.Invoke(new Action(() => sumdataf_162.Text = salaryItemFilter?.Sum(t => t.dataf_162).ToString()));//公积金单位
+                Dispatcher.Invoke(new Action(() => sumdataf_3.Text = salaryItemFilter?.Sum(t => t.dataf_3).ToString()));//实发合计
+                Dispatcher.Invoke(new Action(() => sumdataf_163.Text = salaryItemFilter?.Sum(t => t.dataf_163).ToString()));//扣减合计
                 _cachedSalaryItems = salaryItem;
-                if (salaryItem != null)
+                if (salaryItemFilter != null)
                 {
                     var viewModel = new MainViewModel();
                     _viewModel = viewModel;
                     this.DataContext = viewModel;
 
-                    List<SalaryItem>? matchList = salaryItem.Where(t => t.datacyear == statisticsYear).ToList();
+                    List<SalaryItem>? matchList = salaryItemFilter.Where(t => t.datacyear == statisticsYear).ToList();
                     decimal? total = 0.00M;
                     if (matchList != null)
                     {
@@ -129,21 +133,17 @@ namespace Account.Views
 
         private void cboxStatisticsYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // 【防崩开关 1】如果缓存数据还没拿到，或者是初始化引起的切换，直接拦截
             if (_cachedSalaryItems == null || cboxStatisticsYear.SelectedItem == null)
                 return;
 
             try
             {
-                // 安全拿到年份
                 int statisticsYear = int.Parse(cboxStatisticsYear.SelectedItem.ToString()!);
 
-                // 🔍 【修复】直接从缓存里筛选指定年份的所有期间数据
                 List<SalaryItem> matchList = _cachedSalaryItems.Where(t => t.datacyear == statisticsYear).ToList();
 
                 if (matchList.Count > 0)
                 {
-                    // 1. 将该年份下多条月份数据进行汇总（按年分组）
                     var yearGroup = matchList.GroupBy(t => t.datacyear)
                         .Select(g => new RawDataObject
                         {
@@ -181,11 +181,29 @@ namespace Account.Views
         private void BindingYear()
         {
             cboxStatisticsYear.Items.Clear();
+            cboxYear.Items.Clear();
             for (int i = DateTime.Now.Year; i >= 2014; i--)
             {
                 cboxStatisticsYear.Items.Add(i);
+                cboxYear.Items.Add(i);
             }
             cboxStatisticsYear.SelectedIndex = 0;
+            cboxYear.SelectedIndex = 0;
+        }
+
+        private void cboxYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboxYear.SelectedItem == null)
+                return;
+            int selectYear = int.Parse(cboxYear.SelectedItem.ToString()!);
+            List<SalaryItem>? salaryItemFilter = _cachedSalaryItems?.Where(o => o.datacyear == selectYear).OrderByDescending(t => t.datacyear).ThenByDescending(t => t.datacperiod).ToList();
+            SalaryDatagrid.ItemsSource = salaryItemFilter;
+
+            Dispatcher.Invoke(new Action(() => sumdataf_32.Text = salaryItemFilter?.Sum(t => t.dataf_32).ToString()));//核定工资总额合计
+            Dispatcher.Invoke(new Action(() => sumdataf_159.Text = salaryItemFilter?.Sum(t => t.dataf_159).ToString()));//公积金个人
+            Dispatcher.Invoke(new Action(() => sumdataf_162.Text = salaryItemFilter?.Sum(t => t.dataf_162).ToString()));//公积金单位
+            Dispatcher.Invoke(new Action(() => sumdataf_3.Text = salaryItemFilter?.Sum(t => t.dataf_3).ToString()));//实发合计
+            Dispatcher.Invoke(new Action(() => sumdataf_163.Text = salaryItemFilter?.Sum(t => t.dataf_163).ToString()));//扣减合计
         }
     }
 }
