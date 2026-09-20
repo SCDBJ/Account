@@ -40,7 +40,7 @@ namespace Account.Models.SalaryDetail
         public void LoadBaseData(List<RawBaseDataObject> rawList)
         {
             GridBaseData.Clear();
-
+            string amountType = "年终奖";
             foreach (var raw in rawList)
             {
                 GridBaseData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "核定工资", Amount = raw.dataf_32 });
@@ -48,21 +48,21 @@ namespace Account.Models.SalaryDetail
             }
             if (rawList.Count > 0)
             {
-                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, "年终奖");
+                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, amountType);
                 if (incomerecordList.Count > 0)
                 {
-                    GridBaseData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = incomerecordList[0].incomeAmount });
+                    GridBaseData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = amountType, Amount = incomerecordList[0].incomeAmount });
                 }
                 else
                 {
-                    GridBaseData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = 0 });
+                    GridBaseData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = amountType, Amount = 0 });
                 }
             }
         }
         public void LoadActualData(List<RawActualDataObject> rawList)
         {
             GridActualData.Clear();
-
+            string amountType = "年终奖";
             foreach (var raw in rawList)
             {
                 GridActualData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发合计", Amount = raw.dataf_3 });
@@ -71,14 +71,14 @@ namespace Account.Models.SalaryDetail
             }
             if (rawList.Count > 0)
             {
-                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, "年终奖");
+                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, amountType);
                 if (incomerecordList.Count > 0)
                 {
-                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = incomerecordList[0].incomeAmount });
+                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = amountType, Amount = incomerecordList[0].incomeAmount });
                 }
                 else
                 {
-                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = 0 });
+                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = amountType, Amount = 0 });
                 }
             }
         }
