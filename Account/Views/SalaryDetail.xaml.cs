@@ -271,6 +271,9 @@ namespace Account.Views
 
                     _viewModel.GridBaseData.Clear();
                     txtBaseTotalAmount.Text = "0.00";
+
+                    _viewModel.GridActualData.Clear();
+                    txtActualTotalAmount.Text = "0.00";
                 }
             }
             catch (Exception ex)
