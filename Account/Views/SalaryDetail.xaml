@@ -129,7 +129,7 @@ HeadersVisibility="All"
 RowHeaderWidth="60" 
 AutoGenerateColumns="False" 
 IsReadOnly="True"
-Margin="20,365,0,314"
+Margin="20,361,0,318"
 LoadingRow="DataGrid_LoadingRow" 
 GridLinesVisibility="All" 
 VerticalScrollBarVisibility="Auto"
@@ -157,7 +157,44 @@ MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtBaseTotalAmount"  HorizontalAlignment="Left" Margin="239,568,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtBaseTotalAmount"  HorizontalAlignment="Left" Margin="239,566,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108"  />
+        <DataGrid  Grid.Column="1" 
+            x:Name="salaryActualDataGrid" 
+            ItemsSource="{Binding GridActualData}"
+            HorizontalAlignment="Left"
+            HeadersVisibility="All" 
+            RowHeaderWidth="60" 
+            AutoGenerateColumns="False" 
+            IsReadOnly="True"
+            Margin="20,603,0,35"
+            LoadingRow="DataGrid_LoadingRow" 
+            GridLinesVisibility="All" 
+            VerticalScrollBarVisibility="Auto"
+            MaxHeight="{Binding Height, Source={x:Static SystemParameters.WorkArea}}">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <!-- 列定义 -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="年份" Binding="{Binding DataCYear}" Width="1.2*" />
+
+                <DataGridTextColumn Header="类型" Binding="{Binding AmountType}" Width="1.8*" />
+
+                <DataGridTextColumn Header="金额" Binding="{Binding Amount, StringFormat=\{0:N2\}}" Width="1.7*" >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Column="1" Visibility="Visible" x:Name="txtActualTotalAmount"  HorizontalAlignment="Left" Margin="239,854,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" TextAlignment="Center" FontSize="13" Height="31" Width="108" Grid.RowSpan="2"  />
 
     </Grid>
 </Page>

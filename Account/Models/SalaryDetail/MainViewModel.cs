@@ -24,6 +24,7 @@ namespace Account.Models.SalaryDetail
         // DataGrid 最终绑定的数据源
         public ObservableCollection<DisplayItem> GridData { get; set; } = new ObservableCollection<DisplayItem>();
         public ObservableCollection<DisplayItem> GridBaseData { get; set; } = new ObservableCollection<DisplayItem>();
+        public ObservableCollection<DisplayItem> GridActualData { get; set; } = new ObservableCollection<DisplayItem>();
         public void LoadData(List<RawDataObject> rawList)
         {
             GridData.Clear();
@@ -47,7 +48,7 @@ namespace Account.Models.SalaryDetail
             }
             if (rawList.Count > 0)
             {
-                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear);
+                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, "年终奖");
                 if (incomerecordList.Count > 0)
                 {
                     GridBaseData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = incomerecordList[0].incomeAmount });
@@ -58,12 +59,36 @@ namespace Account.Models.SalaryDetail
                 }
             }
         }
+        public void LoadActualData(List<RawActualDataObject> rawList)
+        {
+            GridActualData.Clear();
+
+            foreach (var raw in rawList)
+            {
+                GridActualData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "实发合计", Amount = raw.dataf_3 });
+                GridActualData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金个人", Amount = raw.dataf_159 });
+                GridActualData.Add(new DisplayItem { DataCYear = raw.datacyear, AmountType = "公积金单位", Amount = raw.dataf_162 });
+            }
+            if (rawList.Count > 0)
+            {
+                List<IncomerecordResponse> incomerecordList = RequestBonus(rawList[0].datacyear, "年终奖");
+                if (incomerecordList.Count > 0)
+                {
+                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = incomerecordList[0].incomeAmount });
+                }
+                else
+                {
+                    GridActualData.Add(new DisplayItem { DataCYear = rawList[0].datacyear, AmountType = "年终奖", Amount = 0 });
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        private List<IncomerecordResponse> RequestBonus(string datacyear)
+        private List<IncomerecordResponse> RequestBonus(string? datacyear,string categoryName)
         {
             string incomerecordItems = "/api/incomerecord-items";
 
@@ -90,7 +115,7 @@ namespace Account.Models.SalaryDetail
                         List<IncomerecordResponse>? incomerecordResponse = JsonSerializer.Deserialize<List<IncomerecordResponse>>(response.Content);
                         if (incomerecordResponse != null)
                         {
-                            List<IncomerecordResponse> incomerecordList=incomerecordResponse.Where(o => o.incomeYear.ToString() == datacyear&o.categoryName=="年终奖").ToList();
+                            List<IncomerecordResponse> incomerecordList=incomerecordResponse.Where(o => o.incomeYear.ToString() == datacyear&o.categoryName== categoryName).ToList();
                             return incomerecordList;
                         }
                     }
@@ -138,6 +163,25 @@ namespace Account.Models.SalaryDetail
             get; set;
         }
         public decimal? dataf_32
+        {
+            get; set;
+        }
+        public decimal? dataf_162
+        {
+            get; set;
+        }
+    }
+    public class RawActualDataObject
+    {
+        public string? datacyear
+        {
+            get; set;
+        }
+        public decimal? dataf_3
+        {
+            get; set;
+        }
+        public decimal? dataf_159
         {
             get; set;
         }

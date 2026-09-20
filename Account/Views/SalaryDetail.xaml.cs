@@ -146,6 +146,38 @@ namespace Account.Views
                         }
                         viewModel.LoadBaseData(rawBaseList);
                         txtBaseTotalAmount.Text = basetotal.ToString();
+
+
+                        decimal? actualtotal = 0.00M;
+                        var rawActualData = new List<RawActualDataObject>();
+                        RawActualDataObject rawActualDataObject = new RawActualDataObject();
+                        foreach (var item in matchList)
+                        {
+                            rawActualDataObject = new RawActualDataObject
+                            {
+                                datacyear = item.datacyear.ToString(),
+                                dataf_3 = item.dataf_3,
+                                dataf_159 = item.dataf_159,
+                                dataf_162 = item.dataf_162
+                            };
+                            rawActualData.Add(rawActualDataObject);
+                            actualtotal += item.dataf_3 + item.dataf_159 + item.dataf_162;
+                        }
+                        var rawActualDatas = rawActualData.GroupBy(t => new { t.datacyear }).
+                           Select(g => new
+                           {
+                               g.Key.datacyear,
+                               dataf_3 = g.Sum(x => x.dataf_3),
+                               dataf_159 = g.Sum(x => x.dataf_159),
+                               dataf_162 = g.Sum(x => x.dataf_162)
+                           }).ToList();
+                        List<RawActualDataObject> rawActualList = new List<RawActualDataObject>();
+                        foreach (var raw in rawActualDatas)
+                        {
+                            rawActualList.Add(new RawActualDataObject { datacyear = raw.datacyear, dataf_3 = raw.dataf_3, dataf_159 = raw.dataf_159, dataf_162 = raw.dataf_162 });
+                        }
+                        viewModel.LoadActualData(rawActualList);
+                        txtActualTotalAmount.Text = actualtotal.ToString();
                     }
                 }
             }
@@ -216,6 +248,20 @@ namespace Account.Views
                     _viewModel.LoadBaseData(yearBaseGroup);
                     decimal? basetotal = _viewModel.GridBaseData.Sum(item => item.Amount);
                     txtBaseTotalAmount.Text = basetotal.ToString();
+
+
+                    var yearActualGroup = matchList.GroupBy(t => t.datacyear)
+                        .Select(g => new RawActualDataObject
+                        {
+                            datacyear = g.Key.ToString(),
+                            dataf_3 = g.Sum(x => x.dataf_3),
+                            dataf_159 = g.Sum(x => x.dataf_159),
+                            dataf_162 = g.Sum(x => x.dataf_162)
+                        }).ToList();
+
+                    _viewModel.LoadActualData(yearActualGroup);
+                    decimal? actualtotal = _viewModel.GridActualData.Sum(item => item.Amount);
+                    txtActualTotalAmount.Text = actualtotal.ToString();
                 }
                 else
                 {
