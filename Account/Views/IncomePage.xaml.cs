@@ -55,11 +55,11 @@ namespace Account.Views
             IEnumerable<IncomerecordResponse>? matchList;
             if (remark == " ")
             {
-                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime <= endDate && x.incomeNote== remark.Trim());
+                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime < endDate && x.incomeNote== remark.Trim());
             }
             else
             {
-                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime <= endDate && x.incomeNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
+                matchList = incomerecordList?.Where(x => x.incomeTime >= startDate && x.incomeTime < endDate && x.incomeNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
             }
             
             incomeDataGrid.ItemsSource = matchList?.OrderByDescending(o=>o.incomeTime);

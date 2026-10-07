@@ -94,11 +94,11 @@ namespace Account.Views
             IEnumerable<ConsumprecordResponse>? matchList;
              if (remark == " ")
             {
-                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate && x.consumpNote== remark.Trim());
+                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime < endDate && x.consumpNote== remark.Trim());
             }
             else
             {
-                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime <= endDate && x.consumpNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
+                matchList = consumprecordList?.Where(x => x.consumpTime >= startDate && x.consumpTime < endDate && x.consumpNote.Contains(remark, StringComparison.CurrentCultureIgnoreCase));
             }
             
             if (ConsumprecordData.categoryId != 2)
